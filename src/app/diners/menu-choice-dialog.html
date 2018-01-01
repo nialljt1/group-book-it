@@ -1,0 +1,53 @@
+<td-layout-card-over cardWidth="90" cardTitle="Add menu choice" cardSubtitle="Select a menu choice">
+
+    <mat-card-content>
+        <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
+            <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
+              <span class="mat-title"></span>
+            </span>
+            <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
+              <span *ngIf="(selectable && !selectedRows.length) || !selectable" class="mat-title"></span>
+              <span *ngIf="selectedRows.length && selectable" class="mat-body-1">0 item(s) selected</span>
+            </span>
+            <td-search-box #searchBox backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)" flex>
+            </td-search-box>
+          </div>
+          <mat-divider></mat-divider>
+
+  <table td-data-table>
+    <tr>
+    <th td-data-table-column
+       *ngFor="let column of columns"
+        [attr.name]="column.name"
+        [attr.sortable]="true"
+        [attr.numeric]="false"
+        (sortChange)="sort($event)">
+        {{column.label}}
+    </th>
+    <th></th>
+    <th></th>
+  </tr>
+    <tr td-data-table-row *ngFor="let row of filteredData">
+      <td td-data-table-cell>
+          {{row['name']}}
+      </td>
+      <td td-data-table-cell>
+        {{row['description']}}
+      </td>
+      <td>
+          <input matInput placeholder="Quantity" value="1" type="number" min="1"/>
+      </td>
+      <td><button mat-button (click)="addMenuItem(row, $event)">Add</button></td>
+    </tr>
+  </table>
+      <div class="mat-padding" *ngIf="!tableData" layout="row" layout-align="center center">
+        <h3>No results to display.</h3>
+      </div>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions>
+      <mat-dialog-actions>
+        <button mat-button mat-button (click)="cancel()">CANCEL</button>
+      </mat-dialog-actions>
+    </mat-card-actions>
+  </td-layout-card-over>

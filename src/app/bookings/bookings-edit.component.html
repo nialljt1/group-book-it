@@ -1,0 +1,34 @@
+<td-layout-nav logo="assets:covalent">
+  <mat-card tdMediaToggle="gt-xs">
+  <div *ngIf="booking" layout-gt-sm="row" tdMediaToggle="gt-xs">
+    <mat-list>
+        <mat-list-item layout-align="row">
+            <mat-icon mat-list-avatar> receipt </mat-icon>
+            <h3 mat-line>{{booking.startingAtDate}}</h3>
+            <p mat-line>Date</p>
+          </mat-list-item>
+          <mat-list-item layout-align="row">
+            <mat-icon mat-list-avatar> receipt </mat-icon>
+            <h3 mat-line>{{booking.startingAtTime}}</h3>
+            <p mat-line>Time</p>
+          </mat-list-item>
+          <mat-list-item layout-align="row">
+            <mat-icon mat-list-avatar> receipt </mat-icon>
+            <h3 mat-line>{{booking.organiser.fullName}}</h3>
+            <p mat-line>Organiser</p>
+          </mat-list-item>
+          <mat-list-item layout-align="row">
+            <mat-icon mat-list-avatar> receipt </mat-icon>
+            <h3 mat-line>{{booking.numberOfDiners}}</h3>
+            <p mat-line>Number Of Diners</p>
+          </mat-list-item>
+    </mat-list>
+    <mat-divider></mat-divider>
+    <mat-card-actions>
+      <button mat-button color="accent" class="text-upper" (click)="goBack()">
+        Back
+      </button>
+    </mat-card-actions>
+  </div>
+  </mat-card>
+</td-layout-nav>

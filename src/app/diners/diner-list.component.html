@@ -1,0 +1,107 @@
+<td-layout-nav logo="assets:covalent">
+  <mat-card tdMediaToggle="gt-xs">
+  <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
+    <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
+      <span class="mat-title">Title here</span>
+    </span>
+    <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
+      <span *ngIf="(selectable && !selectedRows.length) || !selectable" class="mat-title">Title here</span>
+      <span *ngIf="selectedRows.length && selectable" class="mat-body-1">0 item(s) selected</span>
+    </span>
+    <td-search-box #searchBox backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)" flex>
+    </td-search-box>
+  </div>
+  <mat-divider></mat-divider>
+
+  <table td-data-table>
+    <th td-data-table-column
+       *ngFor="let column of columns"
+        [attr.name]="column.name"
+        [attr.sortable]="true"
+        [attr.numeric]="false"
+        (sortChange)="sort($event)">
+        {{column.label}}
+    </th>
+    <tr td-data-table-row *ngFor="let row of filteredData">
+      <td td-data-table-cell (click)="openDialog(row)">
+        <button mat-button [class.mat-accent]="!row['forename']">{{row['forename'] || 'Add Comment'}}</button>
+      </td>
+      <td td-data-table-cell (click)="openDialog(row)">
+        <button mat-button [class.mat-accent]="!row['surname']">{{row['surname'] || 'Add Comment'}}</button>
+      </td>
+      <td td-data-table-cell (click)="openDialog(row)">
+        <button mat-button [class.mat-accent]="!row['notes']">{{row['notes'] || 'Add Notes'}}</button>
+      </td>
+      <td td-data-table-cell
+       *ngFor="let column of menuChoiceColumns()" [attr.numeric]="column.numeric">
+       <ul>
+         <li *ngFor="let choice of row[column.name]">{{choice}}</li>
+       </ul>
+        <div><br>
+          <a mat-mini-fab color="accent" (click)="addMenuItem(row, column)">
+              <mat-icon>add</mat-icon>
+          </a>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div class="mat-padding" *ngIf="!data" layout="row" layout-align="center center">
+    <h3>No results to display.</h3>
+  </div>
+  <!-- <td-paging-bar #pagingBar [pageSizes]="[5, 10, 15, 20]" [total]="filteredTotal" (change)="page($event)">
+    <span td-paging-bar-label hide-xs>Row per page:</span>
+    {{pagingBar.range}} <span hide-xs>of {{pagingBar.total}}</span>
+  </td-paging-bar> -->
+  </mat-card>
+  <a mat-fab color="accent" class="mat-fab-bottom-right fixed" [routerLink]="['add']">
+      <mat-icon>add</mat-icon>
+  </a>
+  </td-layout-nav>
+
+  <!--
+  <div class="col-mat-12" *ngIf="!diner" >
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h3 class="panel-title">Diners</h3>
+          </div>
+          <button (click)="deleteSelected()">Delete Selected</button>
+          <div class="panel-body">
+            <div *ngIf="booking && menuSections">
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th><input type="checkbox"
+                            name="selectAll"
+                            (click)="selectAll()"
+                            [checked] = "allChecked()"
+                            /></th>
+                          <th>Name</th>
+                          <th>Notes</th>
+                          <ng-container *ngFor="let menuSection of menuSections;">
+                            <th>{{ menuSection.name }}</th>
+                          </ng-container>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr style="height:20px;" *ngFor="let diner of booking.diners" >
+                          <td><input type="checkbox"
+                            name="selectDiner"
+                            value="{{diner.id}}"
+                            [(ngModel)]="diner.checked"/>
+                          </td>
+                          <td>{{diner.fullName}}</td>
+                          <td>{{diner.notes}}</td>
+                          <ng-container *ngFor="let menuSectionMenuItem of diner.menuSectionMenuItems;">
+                            <td>
+                            <ng-container *ngFor="let dinerMenuItem of menuSectionMenuItem.dinerMenuItems;">
+                              <div>{{ dinerMenuItem.menuItem.name }}</div>
+                            </ng-container>
+                            </td>
+                           <td><button (click)="editDiner(diner.id)">Edit</button></td>
+                      </tr>
+                  </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+  </div>   -->

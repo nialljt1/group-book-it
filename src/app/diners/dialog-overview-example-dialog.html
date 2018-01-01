@@ -1,0 +1,71 @@
+<td-layout-card-over cardWidth="90" cardTitle="Update Diner" cardSubtitle="Fill form to update diner details">
+  <ng-template tdLoading="user.form">
+    <mat-card-content class="push-bottom-none">
+      <form #userForm="ngForm">
+        <div layout="row">
+          <mat-input-container flex>
+            <input matInput
+                    #forenameElement
+                    #forenameControl="ngModel"
+                    type="text"
+                    placeholder="Forename"
+                    [(ngModel)]="forename"
+                    name="forename"
+                    maxlength="30"
+                    required>
+            <mat-hint align="start">
+              <span [hidden]="forenameControl.pristine" class="tc-red-600">
+                <span [hidden]="!forenameControl.hasError('required')">Required</span>
+              </span>
+            </mat-hint>
+            <mat-hint align="end">{{forenameElement.value.length}} / 30</mat-hint>
+          </mat-input-container>
+        </div>
+        <div layout="row">
+          <mat-input-container flex>
+            <input matInput
+                    #surnameElement
+                    #surnameControl="ngModel"
+                    type="text"
+                    placeholder="Surname"
+                    [(ngModel)]="surname"
+                    name="surname"
+                    maxlength="30"
+                    required>
+            <mat-hint align="start">
+              <span [hidden]="surnameControl.pristine" class="tc-red-600">
+                <span [hidden]="!surnameControl.hasError('required')">Required</span>
+              </span>
+            </mat-hint>
+            <mat-hint align="end">{{surnameElement.value.length}} / 30</mat-hint>
+          </mat-input-container>
+        </div>
+        <div layout="row">
+          <mat-input-container flex>
+            <textarea
+                  matInput
+                    #notesElement
+                    #notesControl="ngModel"
+                    type="textarea"
+                    placeholder="Notes"
+                    [(ngModel)]="notes"
+                    rows="5"
+                    name="notes">
+            </textarea>
+          </mat-input-container>
+
+        </div>
+        <div layout="row">
+            <mat-icon>information</mat-icon>The notes above are optional and are intended to describe any specific requirements a diner might have e.g. vegetarian, gluten free, wheelchair accessible etc.
+          </div>
+      </form>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions>
+      <mat-dialog-actions>
+        <button mat-button color="primary" (click)="save()">SAVE</button>
+        <button mat-button mat-button (click)="cancel()">CANCEL</button>
+      </mat-dialog-actions>
+    </mat-card-actions>
+  </ng-template>
+</td-layout-card-over>
