@@ -25,6 +25,7 @@ import 'rxjs/add/observable/forkJoin';
 import { TdDataTableService, TdDataTableSortingOrder, ITdDataTableSortChangeEvent, ITdDataTableColumn } from '@covalent/core';
 import { IPageChangeEvent } from '@covalent/core';
 import { TdDialogService, CovalentLayoutModule, CovalentStepsModule, CovalentPagingModule, CovalentSearchModule } from '@covalent/core';
+import { ITdDynamicElementConfig, TdDynamicElement, TdDynamicType, ITdDynamicElementValidator } from '@covalent/dynamic-forms';
 
 
 /* TODO: Fix sorting Currently only sorts one way doesn't switch to reverse when you try to sort by a column twice */
@@ -288,6 +289,26 @@ export class DialogOverviewExampleDialog {
   public surname: string;
   public notes: string;
 
+  textElements: ITdDynamicElementConfig[] = [
+    {
+    name: 'forename',
+    type: TdDynamicElement.Input,
+    required: true,
+    maxLength: 30
+  },
+  {
+    name: 'surname',
+    type: TdDynamicElement.Input,
+    required: true,
+    maxLength: 30
+  },
+  {
+    name: 'notes',
+    type: TdDynamicElement.Textarea,
+    required: false
+  }
+ ];
+
   cancel() {
     this.dialogRef.close();
   }
@@ -369,6 +390,8 @@ export class MenuChoiceDialog {
   );
 }
 
+  search(event: any) {
+  }
 
   cancel() {
     this.dialogRef.close();
@@ -376,3 +399,16 @@ export class MenuChoiceDialog {
 
   }
 
+  export interface ITdDynamicElementConfig {
+    label?: string;
+    name: string;
+    type: TdDynamicType | TdDynamicElement;
+    required?: boolean;
+    min?: any;
+    max?: any;
+    minLength?: string;
+    maxLength?: string;
+    selections?: any[];
+    default?: any;
+    validators?: ITdDynamicElementValidator[];
+  }

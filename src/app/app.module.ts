@@ -1,5 +1,5 @@
 import { NotificationsService } from 'angular2-notifications';
-import { DinersListComponent, MenuChoiceDialog } from './diners/diner-list.component';
+import { DinersListComponent, MenuChoiceDialog, DialogOverviewExampleDialog } from './diners/diner-list.component';
 import { DinerService } from './services/DinerService';
 import { DinerMenuItemsService } from './services/DinerMenuItemsService';
 import { Configuration } from './app.constants';
@@ -8,6 +8,8 @@ import { BookingsEditComponent } from './bookings/bookings-edit.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { DateFormatPipe, TimeFormatPipe } from './components/pipes';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule,
@@ -19,6 +21,7 @@ import { CovalentHttpModule } from '@covalent/http';
 import { CovalentHighlightModule } from '@covalent/highlight';
 import { CovalentMarkdownModule } from '@covalent/markdown';
 import { CovalentDynamicFormsModule } from '@covalent/dynamic-forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TdDataTableService, TdDialogService } from '@covalent/core';
 import { CovalentSearchModule } from '@covalent/core';
 
@@ -52,9 +55,16 @@ const appRoutes: Routes = [
     DinersListComponent,
     DinersComponent,
     PageNotFoundComponent,
-    MenuChoiceDialog
+    MenuChoiceDialog,
+    DialogOverviewExampleDialog,
+    DateFormatPipe,
+    TimeFormatPipe
   ],
-  entryComponents: [MenuChoiceDialog],
+  entryComponents:
+  [
+    MenuChoiceDialog,
+    DialogOverviewExampleDialog
+  ],
   imports: [
     RouterModule.forRoot(
       appRoutes,
@@ -76,7 +86,10 @@ const appRoutes: Routes = [
     CovalentHighlightModule,
     CovalentMarkdownModule,
     CovalentDynamicFormsModule,
-    CovalentSearchModule
+    CovalentSearchModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     BookingsService,
@@ -88,6 +101,10 @@ const appRoutes: Routes = [
     TdDataTableService,
     TdDialogService,
     NotificationsService
+  ],
+  exports: [
+    DateFormatPipe,
+    TimeFormatPipe
   ],
   bootstrap: [AppComponent]
 })
