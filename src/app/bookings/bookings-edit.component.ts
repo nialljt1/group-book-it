@@ -1,6 +1,6 @@
 import { SecurityService } from '../services/SecurityService';
 import { MenuItem } from '../models/menuItem';
-import { DinerMenuItem } from '../models//dinerMenuItem';
+import { DinerMenuItem } from '../models/dinerMenuItem';
 import { Diner } from '../models//diner';
 import { MenuSection } from '../models/menuSection';
 import { MenuSectionsService } from '../services/MenuSectionsService';

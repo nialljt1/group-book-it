@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CovalentLayoutModule } from '@covalent/core';
 
 @Component({
   selector: 'app-root',

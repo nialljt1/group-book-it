@@ -15,7 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule,
          MatIconModule, MatDialogModule, MatDialogRef, MatListModule } from '@angular/material';
 
-import { CovalentLayoutModule, CovalentStepsModule /*, any other modules */ } from '@covalent/core';
+import { CovalentLayoutModule, CovalentStepsModule, /*, any other modules */
+TdLayoutManageListComponent} from '@covalent/core';
 // (optional) Additional Covalent Modules imports
 import { CovalentHttpModule } from '@covalent/http';
 import { CovalentHighlightModule } from '@covalent/highlight';

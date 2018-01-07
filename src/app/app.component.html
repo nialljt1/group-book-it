@@ -1,15 +1,12 @@
 <td-layout>
-  <td-navigation-drawer flex sidenavTitle="Covalent" logo="assets:teradata" name="" email="">
-  <mat-nav-list>
-    <ng-template let-item let-last="last" ngFor [ngForOf]="routes">
-      <a mat-list-item [routerLink]="[item.route]"><mat-icon>{{item.icon}}</mat-icon>{{item.title}}</a>
-    </ng-template>
-  </mat-nav-list>
-  <mat-nav-list td-navigation-drawer-menu>
-    <a mat-list-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Sign out</a>
-  </mat-nav-list>
+  <td-navigation-drawer flex sidenavTitle="Group Book It" logo="assets:teradata">
+      <mat-nav-list>
+        <ng-template let-item let-last="last" ngFor [ngForOf]="routes">
+          <a mat-list-item tdLayoutToggle [routerLink]="[item.route]"><mat-icon>{{item.icon}}</mat-icon>{{item.title}}</a>
+        </ng-template>
+      </mat-nav-list>
     </td-navigation-drawer>
-    <td-layout-nav logo="assets:teradata" toolbarTitle="Covalent" navigationRoute="/">
+    <td-layout-nav logo="assets:teradata" toolbarTitle="Group Book It" navigationRoute="/">
       <button mat-icon-button td-menu-button tdLayoutToggle>
         <mat-icon>menu</mat-icon>
       </button>
