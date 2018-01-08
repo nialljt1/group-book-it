@@ -1,0 +1,36 @@
+.menu-choices {
+  vertical-align: top; /* here */
+  height: 100%
+}
+
+td {
+  border-top-style: solid;
+  border-top-width: 1px;
+  padding: 0px;
+}
+
+table {
+  padding: 0px;
+}
+
+th {
+  text-align: left;
+  padding-left: 24px;
+}
+
+td {
+  text-align: left;
+  padding-left: 8px;
+}
+.menu-item-table-header {
+  padding-left: 32px;
+}
+
+.add-menu-item {
+  padding-top: 16px;
+  margin-left:20px;
+}
+
+mat-icon {
+  min-width: 1%;
+}

@@ -32,7 +32,8 @@ import { ITdDynamicElementConfig, TdDynamicElement, TdDynamicType, ITdDynamicEle
 
 @Component({
     selector: 'app-diner-list',
-    templateUrl: 'diner-list.component.html'
+    templateUrl: 'diner-list.component.html',
+    styleUrls: ['diner-list.component.css']
 })
 export class DinersListComponent implements OnInit, OnDestroy   {
 
@@ -105,7 +106,7 @@ columns: ITdDataTableColumn[] =
   addMenuItem(row: any, column: any) {
     const dialogRef = this._dialog.open(MenuChoiceDialog, {
     height: '500px',
-    width: '600px',
+    width: '800px',
     disableClose: false
   });
  dialogRef.componentInstance.dinerId = row.id;
@@ -118,8 +119,20 @@ columns: ITdDataTableColumn[] =
     const diner = this.data.find(s => s.id === row.id);
     diner[column.name].push(result);
   }
-
   });
+}
+
+deleteMenuItem(dinerMenuItemId: number, dinerId: number, columnName: string) {
+  this._dinerMenuItemsService.Delete(dinerMenuItemId).subscribe(response =>  {
+    const diner = this.data.find(s => s.id === dinerId);
+    const menuChoice = diner[columnName].find(s => s.id === dinerMenuItemId);
+    const index = diner[columnName].indexOf(menuChoice);
+    if (index > -1) {
+      diner[columnName].splice(index, 1);
+  }
+    // this._notificationsService.success('Menu choice added', 'You have successfully added a menu choice');
+  }
+  );
 }
 
   ngOnInit(): void {
@@ -129,14 +142,14 @@ columns: ITdDataTableColumn[] =
   setColumnsAndData() {
     if (this.menuSections && this.booking.diners) {
       this.menuSections.forEach(menuSection => {
-        this.columns.push({ name: menuSection.name, label: menuSection.name });
+        this.columns.push({ name: menuSection.name, label: menuSection.name, class: 'menu-item-table-header' });
       });
       this.booking.diners.forEach(diner => {
         const dinerDetails = { id: diner.id, forename: diner.forename, surname: diner.surname, notes: diner.notes };
         diner.menuSectionMenuItems.forEach(menuSectionMenuItem => {
           const menuChoices = [];
                 menuSectionMenuItem.dinerMenuItems.forEach(dinerMenuItem => {
-                    menuChoices.push(dinerMenuItem.menuItem.name);
+                    menuChoices.push( {name: dinerMenuItem.menuItem.name, id: dinerMenuItem.id });
 
             });
           dinerDetails[menuSectionMenuItem.menuSection.name] = menuChoices;
@@ -337,6 +350,7 @@ export class DialogOverviewExampleDialog {
   // tslint:disable-next-line:component-selector
   selector: 'menu-choice-dialog',
   templateUrl: 'menu-choice-dialog.html',
+  styleUrls: ['menu-choice.component.css']
 })
 // tslint:disable-next-line:component-class-suffix
 export class MenuChoiceDialog {
@@ -384,8 +398,9 @@ export class MenuChoiceDialog {
     // TODO: implement note
     //// dinerMenuItem.note = 'test'
     this._dinerMenuItemsService.Add(dinerMenuItem).subscribe(response =>  {
+
       this._notificationsService.success('Menu choice added', 'You have successfully added a menu choice');
-      this.dialogRef.close(row.name);
+      this.dialogRef.close( {name: row.name, id : response.json().id} );
     }
   );
 }
