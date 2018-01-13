@@ -1,5 +1,7 @@
+import { DinerUpdateDialog } from './diners/diner-update-dialog.component';
 import { NotificationsService } from 'angular2-notifications';
-import { DinersListComponent, MenuChoiceDialog, DialogOverviewExampleDialog } from './diners/diner-list.component';
+import { DinersListComponent } from './diners/diner-list.component';
+
 import { DinerService } from './services/DinerService';
 import { DinerMenuItemsService } from './services/DinerMenuItemsService';
 import { Configuration } from './app.constants';
@@ -34,6 +36,7 @@ import { DinersComponent } from './diners/diners.component';
 import { PageNotFoundComponent } from './pageNotFound/pageNotFound.component';
 import { SecurityService } from './services/SecurityService';
 import { MenuSectionsService } from './services/MenuSectionsService';
+import { MenuChoiceDialog } from './diners/menu-choice-dialog.component';
 
 const appRoutes: Routes = [
   { path: 'restaurant', component: RestaurantComponent },
@@ -57,14 +60,14 @@ const appRoutes: Routes = [
     DinersComponent,
     PageNotFoundComponent,
     MenuChoiceDialog,
-    DialogOverviewExampleDialog,
+    DinerUpdateDialog,
     DateFormatPipe,
     TimeFormatPipe
   ],
   entryComponents:
   [
     MenuChoiceDialog,
-    DialogOverviewExampleDialog
+    DinerUpdateDialog
   ],
   imports: [
     RouterModule.forRoot(

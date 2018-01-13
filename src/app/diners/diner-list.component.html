@@ -2,6 +2,9 @@
   <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
     <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
       <span class="mat-title">List of diners</span>
+      <a color="accent" mat-mini-fab  (click)="openDialog({})">
+        <mat-icon>add</mat-icon>
+    </a>
     </span>
     <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
       <span *ngIf="selectedRows.length && selectable" class="mat-body-1">0 item(s) selected</span>

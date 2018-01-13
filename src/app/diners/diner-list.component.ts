@@ -25,8 +25,12 @@ import 'rxjs/add/observable/forkJoin';
 import { TdDataTableService, TdDataTableSortingOrder, ITdDataTableSortChangeEvent, ITdDataTableColumn } from '@covalent/core';
 import { IPageChangeEvent } from '@covalent/core';
 import { TdDialogService, CovalentLayoutModule, CovalentStepsModule, CovalentPagingModule, CovalentSearchModule } from '@covalent/core';
-import { ITdDynamicElementConfig, TdDynamicElement, TdDynamicType, ITdDynamicElementValidator } from '@covalent/dynamic-forms';
+import { ITdDynamicElementConfig, TdDynamicElement, TdDynamicType,
+  ITdDynamicElementValidator, TdDynamicFormsComponent } from '@covalent/dynamic-forms';
 
+import {Directive, Input, ViewChild} from '@angular/core';
+import { DinerUpdateDialog } from './diner-update-dialog.component';
+import { MenuChoiceDialog } from './menu-choice-dialog.component';
 
 /* TODO: Fix sorting Currently only sorts one way doesn't switch to reverse when you try to sort by a column twice */
 
@@ -82,16 +86,16 @@ columns: ITdDataTableColumn[] =
   }
 
    openDialog(row: any) {
-      const dialogRef = this._dialog.open(DialogOverviewExampleDialog, {
+      const dialogRef = this._dialog.open(DinerUpdateDialog, {
       height: '700px',
       width: '700px',
       disableClose: false
     });
 
    dialogRef.componentInstance.id = row.id;
-   dialogRef.componentInstance.forename = row.forename;
-   dialogRef.componentInstance.surname = row.surname;
-   dialogRef.componentInstance.notes = row.notes;
+   dialogRef.componentInstance.textElements[0].default = row.forename;
+   dialogRef.componentInstance.textElements[1].default = row.surname;
+   dialogRef.componentInstance.textElements[2].default = row.notes;
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -109,6 +113,7 @@ columns: ITdDataTableColumn[] =
     width: '800px',
     disableClose: false
   });
+
  dialogRef.componentInstance.dinerId = row.id;
  dialogRef.componentInstance.menuSectionName = column;
  dialogRef.componentInstance.tableData = this.menuSections.find(s => s.name === column.name).menuItems;
@@ -280,150 +285,16 @@ deleteMenuItem(dinerMenuItemId: number, dinerId: number, columnName: string) {
 }
 
 
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'dialog-overview-example-dialog',
-  templateUrl: 'dialog-overview-example-dialog.html',
-})
-// tslint:disable-next-line:component-class-suffix
-export class DialogOverviewExampleDialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private _dinerService: DinerService,
-    private _notificationsService: NotificationsService,
-
-  ) { }
-
-
-  public id: number;
-  public forename: string;
-  public surname: string;
-  public notes: string;
-
-  textElements: ITdDynamicElementConfig[] = [
-    {
-    name: 'forename',
-    type: TdDynamicElement.Input,
-    required: true,
-    maxLength: 30
-  },
-  {
-    name: 'surname',
-    type: TdDynamicElement.Input,
-    required: true,
-    maxLength: 30
-  },
-  {
-    name: 'notes',
-    type: TdDynamicElement.Textarea,
-    required: false
-  }
- ];
-
-  cancel() {
-    this.dialogRef.close();
-  }
-
-  save() {
-        const diner = new Diner();
-        diner.id = this.id;
-        diner.forename = this.forename;
-        diner.surname = this.surname;
-        diner.notes = this.notes;
-        diner.lastUpdatedAt = new Date();
-        // TODO: change this to use signed in user
-        diner.lastUpdatedByEmailAddress = 'nialltucker@gmail.com';
-
-        this._dinerService.Update(diner).subscribe(response =>  {
-            this._notificationsService.success('Diner updated', 'You have successfully updated diner details.');
-            this.dialogRef.close(diner);
-        }
-        );
-      }
-  }
-
-
-
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'menu-choice-dialog',
-  templateUrl: 'menu-choice-dialog.html',
-  styleUrls: ['menu-choice.component.css']
-})
-// tslint:disable-next-line:component-class-suffix
-export class MenuChoiceDialog {
-
-  // Could leave this as a TODO: addn instructions at the top saying you can add a note to put a requirement for that item. Add toggle
-  // add not
-
-  constructor(
-    public dialogRef: MatDialogRef<MenuChoiceDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private _dinerMenuItemsService: DinerMenuItemsService,
-    private _notificationsService: NotificationsService,
-
-  ) { }
-
-  tableData: any[] = [];
-  columns: ITdDataTableColumn[] =
-    [
-      { name: 'name', label: 'Name'},
-      { name: 'description', label: 'Description'},
-      { name: 'quantity', label: 'Quantity'}
-    ];
-
-    filteredData: any[] = this.tableData;
-    filteredTotal: number = this.tableData.length;
-
-    searchTerm = '';
-    fromRow = 1;
-    currentPage = 1;
-    pageSize = 5;
-    sortBy = 'name';
-    selectedRows: any[] = [];
-    sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
-
-  public menuSectionName: string;
-  public dinerId: number;
-
-  addMenuItem(row: any, event: any) {
-    const target = event.target || event.srcElement || event.currentTarget;
-    const quantity = target.parentElement.parentElement.parentElement.children[2].children[0].value;
-    const dinerMenuItem = new DinerMenuItem();
-    dinerMenuItem.menuItemId = row.id;
-    dinerMenuItem.quantity = quantity;
-    dinerMenuItem.dinerId = this.dinerId;
-    // TODO: implement note
-    //// dinerMenuItem.note = 'test'
-    this._dinerMenuItemsService.Add(dinerMenuItem).subscribe(response =>  {
-
-      this._notificationsService.success('Menu choice added', 'You have successfully added a menu choice');
-      this.dialogRef.close( {name: row.name, id : response.json().id} );
-    }
-  );
-}
-
-  search(event: any) {
-  }
-
-  cancel() {
-    this.dialogRef.close();
-  }
-
-  }
-
-  export interface ITdDynamicElementConfig {
-    label?: string;
-    name: string;
-    type: TdDynamicType | TdDynamicElement;
-    required?: boolean;
-    min?: any;
-    max?: any;
-    minLength?: string;
-    maxLength?: string;
-    selections?: any[];
-    default?: any;
-    validators?: ITdDynamicElementValidator[];
-  }
+  // export interface ITdDynamicElementConfig {
+  //   label?: string;
+  //   name: string;
+  //   type: TdDynamicType | TdDynamicElement;
+  //   required?: boolean;
+  //   min?: any;
+  //   max?: any;
+  //   minLength?: string;
+  //   maxLength?: string;
+  //   selections?: any[];
+  //   default?: any;
+  //   validators?: ITdDynamicElementValidator[];
+  // }

@@ -3,7 +3,7 @@
   <mat-card-subtitle>Fill form to update diner details</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content class="push-bottom-none">
-    <td-dynamic-forms #dynamicForms [elements]="textElements">
+    <td-dynamic-forms [elements]="textElements" #dinerForm>
       <ng-template let-element ngFor [ngForOf]="textElements">
         <ng-template let-control="control" [tdDynamicFormsError]="element.name">
           <span *ngIf="control.touched || !control.pristine">
