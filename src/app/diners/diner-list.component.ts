@@ -44,9 +44,9 @@ export class DinersListComponent implements OnInit, OnDestroy   {
 data: any[] = [];
 columns: ITdDataTableColumn[] =
   [
-    { name: 'forename', label: 'Forename'},
-    { name: 'surname', label: 'Surname'},
-    { name: 'notes', label: 'Notes' }
+    { name: 'forename', label: 'Forename', width: 150},
+    { name: 'surname', label: 'Surname', width: 150},
+    { name: 'notes', label: 'Notes', width: 150}
   ];
 
   filteredData: any[] = this.data;
@@ -55,7 +55,7 @@ columns: ITdDataTableColumn[] =
   searchTerm = '';
   fromRow = 1;
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 500;
   sortBy = 'name';
   selectedRows: any[] = [];
   sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
@@ -96,13 +96,30 @@ columns: ITdDataTableColumn[] =
    dialogRef.componentInstance.textElements[0].default = row.forename;
    dialogRef.componentInstance.textElements[1].default = row.surname;
    dialogRef.componentInstance.textElements[2].default = row.notes;
+   dialogRef.componentInstance.isUpdateDiner = (row.id != null);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const diner = this.data.find(s => s.id === result.id);
-        diner.forename = result.forename;
-        diner.surname = result.surname;
-        diner.notes = result.notes;
+        if (row.id != null) {
+          const diner = this.data.find(s => s.id === result.id);
+          if (result.bookingId === '-1') {
+            this.data = this.data.filter(s => s.id !== result.id);
+            this.filter();
+          } else {
+            diner.forename = result.forename;
+            diner.surname = result.surname;
+            diner.notes = result.notes;
+          }
+
+        } else {
+          const dinerToAdd = new Diner();
+          dinerToAdd.id = result.id;
+          dinerToAdd.forename = result.forename;
+          dinerToAdd.surname = result.surname;
+          dinerToAdd.notes = result.notes;
+          this.data.push(dinerToAdd);
+          this.filter();
+        }
       }
     });
   }

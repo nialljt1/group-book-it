@@ -31,6 +31,8 @@ export class DinerUpdateDialog {
   public forename: string;
   public surname: string;
   public notes: string;
+  public bookingId: string;
+  public isUpdateDiner: boolean;
 
   textElements: ITdDynamicElementConfig[] = [
     {
@@ -56,6 +58,20 @@ export class DinerUpdateDialog {
     this.dialogRef.close();
   }
 
+  title() {
+    return this.isUpdateDiner ? 'Update Diner' : 'Add Diner';
+  }
+
+  delete() {
+    this._dinerService.Delete(this.id).subscribe(response =>  {
+      const diner = new Diner();
+      diner.id = this.id;
+      diner.bookingId = '-1';
+      this._notificationsService.success('Diner removed', 'You have successfully removed a diner.');
+      this.dialogRef.close(diner);
+    });
+  }
+
   save() {
         const diner = new Diner();
         diner.id = this.id;
@@ -65,11 +81,24 @@ export class DinerUpdateDialog {
         diner.lastUpdatedAt = new Date();
         // TODO: change this to use signed in user
         diner.lastUpdatedByEmailAddress = 'nialltucker@gmail.com';
-
-        this._dinerService.Update(diner).subscribe(response =>  {
-            this._notificationsService.success('Diner updated', 'You have successfully updated diner details.');
+        if (!this.isUpdateDiner) {
+          diner.bookingId =  'E166F9A4-5B7B-4C9E-6513-08D45597AED5';
+          diner.lastUpdatedByEmailAddress = 'nialltucker@gmail.com';
+          diner.lastUpdatedAt = new Date();
+          diner.addedByEmailAddress = 'nialltucker@gmail.com';
+          diner.addedAt = new Date();
+          this._dinerService.Add(diner).subscribe(response =>  {
+            diner.id = response.json().id;
+            this._notificationsService.success('Diner added', 'You have successfully added a diner.');
             this.dialogRef.close(diner);
-        }
+          }
         );
+        } else {
+            this._dinerService.Update(diner).subscribe(response =>  {
+              this._notificationsService.success('Diner updated', 'You have successfully updated diner details.');
+              this.dialogRef.close(diner);
+          }
+        );
+        }
       }
   }

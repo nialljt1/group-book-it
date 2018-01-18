@@ -15,7 +15,7 @@ export class Diner {
   checked: boolean;
   menuItems: (MenuItem | undefined)[];
   menuSectionMenuItems: (MenuSectionMenuItem | undefined)[];
-
+  bookingId: string;
   constructor() {
   }
 

@@ -1,5 +1,6 @@
 <mat-card>
-<mat-card-title layout="row" layout-align="start center"><mat-icon class="mat-icon-logo" svgIcon="assets:teradata"></mat-icon> <span class="mat-title">Update Diner</span></mat-card-title>
+<mat-card-title layout="row" layout-align="start center">
+  <span class="mat-title">{{title()}}</span></mat-card-title>
   <mat-card-subtitle>Fill form to update diner details</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content class="push-bottom-none">
@@ -22,6 +23,7 @@
     <div layout="row">
       <button mat-button color="primary" (click)="save()">SAVE</button>
       <button mat-button mat-button (click)="cancel()">CANCEL</button>
+      <button mat-button mat-button (click)="delete()">DELETE</button>
     </div>
   </mat-card-actions>
 </mat-card>

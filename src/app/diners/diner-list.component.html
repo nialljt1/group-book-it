@@ -6,6 +6,7 @@
         <mat-icon>add</mat-icon>
     </a>
     </span>
+    <span class="diners-count">Number of diners: {{ filteredTotal }}</span>
     <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
       <span *ngIf="selectedRows.length && selectable" class="mat-body-1">0 item(s) selected</span>
     </span>
@@ -14,7 +15,7 @@
   </div>
   <mat-divider></mat-divider>
 
-  <table td-data-table>
+  <table td-data-table style="width:100%;">
     <th td-data-table-column
        *ngFor="let column of columns"
         [attr.name]="column.name"
