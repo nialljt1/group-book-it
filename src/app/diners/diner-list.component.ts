@@ -37,7 +37,10 @@ import { MenuChoiceDialog } from './menu-choice-dialog.component';
 @Component({
     selector: 'app-diner-list',
     templateUrl: 'diner-list.component.html',
-    styleUrls: ['diner-list.component.css']
+    styleUrls: [
+      'diner-list.component.css',
+    '../css/FixedTableHeader/main.css'
+  ]
 })
 export class DinersListComponent implements OnInit, OnDestroy   {
 

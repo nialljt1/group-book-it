@@ -4,31 +4,75 @@
 }
 
 td {
-  border-top-style: solid;
-  border-top-width: 1px;
   padding: 0px;
 }
 
 table {
   padding: 0px;
+
 }
+
+.ver1 {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.container-table {
+  width: 100%;
+  background: #fff;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 33px 30px;
+}
+
+.even { background-color: #f8f6ff }
+.odd { background-color: #ffffff; }
 
 th {
   text-align: left;
-  padding-left: 24px;
+  padding-left: 0px;
+  font-family: Lato-Bold;
+  font-size: 18px;
+  color: #fff;
+  line-height: 1.4;
+  background-color: #6c7ae0;
+  padding-top: 18px;
+  padding-bottom: 18px
+}
+
+.first-column {
+  padding-left: 16px;
+  width: 40px;
 }
 
 td {
   text-align: left;
-  padding-left: 8px;
+  font-family: Lato-Regular;
+  font-size: 15px;
+  color: #808080;
+  line-height: 1.4;
+  vertical-align: top;
+  padding-top: 8px;
 }
 .menu-item-table-header {
-  padding-left: 32px;
+  padding-left: 0px;
+}
+
+.edit-table-column {
+  width: 50px;
 }
 
 .add-menu-item {
-  padding-top: 16px;
-  margin-left:20px;
+  padding-top: 0px;
+  padding-bottom: 8px;
 }
 
 mat-icon {

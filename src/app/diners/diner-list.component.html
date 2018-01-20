@@ -14,8 +14,10 @@
     </td-search-box>
   </div>
   <mat-divider></mat-divider>
-
-  <table td-data-table style="width:100%;">
+        <div class="container-table">
+          <div class="ver1">
+  <table td-data-table style="width:100%;" cellspacing="0" cellpadding="0">
+    <th class="first-column"></th>
     <th td-data-table-column
        *ngFor="let column of columns"
         [attr.name]="column.name"
@@ -25,16 +27,21 @@
         (sortChange)="sort($event)">
         {{column.label}}
     </th>
-    <ng-container *ngFor="let row of filteredData">
-    <tr td-data-table-row >
-      <td td-data-table-cell (click)="openDialog(row)">
-        <button mat-button [class.mat-accent]="!row['forename']">{{row['forename'] || 'Add Comment'}}</button>
+    <ng-container *ngFor="let row of filteredData; let index=index; let odd=odd; let even=even;">
+    <tr td-data-table-row  [ngClass]="{ odd: odd, even: even }">
+      <td class="first-column">
+          <a mat-mini-fab color="accent" (click)="openDialog(row)">
+              <mat-icon>edit</mat-icon>
+          </a>
       </td>
-      <td td-data-table-cell (click)="openDialog(row)">
-        <button mat-button [class.mat-accent]="!row['surname']">{{row['surname'] || 'Add Comment'}}</button>
+      <td td-data-table-cell>
+        {{row['forename']}}
       </td>
-      <td td-data-table-cell (click)="openDialog(row)">
-        <button mat-button [class.mat-accent]="!row['notes']">{{row['notes'] || 'Add Notes'}}</button>
+      <td td-data-table-cell>
+          {{row['surname']}}
+      </td>
+      <td td-data-table-cell>
+          {{row['notes']}}
       </td>
       <td class="menu-choices" td-data-table-cell
        *ngFor="let column of menuChoiceColumns()" [attr.numeric]="column.numeric">
@@ -56,6 +63,8 @@
     </tr>
   </ng-container>
   </table>
+</div>
+  </div>
   <div class="mat-padding" *ngIf="!data" layout="row" layout-align="center center">
     <h3>No results to display.</h3>
   </div>
