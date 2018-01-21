@@ -6,7 +6,7 @@
         <mat-icon>add</mat-icon>
     </a>
     </span>
-    <span class="diners-count">Number of diners: {{ filteredTotal }}</span>
+    <span class="diners-count">Number of diners: {{ filteredTotal }}</span><div>{{ myDetails() }}</div>
     <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
       <span *ngIf="selectedRows.length && selectable" class="mat-body-1">0 item(s) selected</span>
     </span>
@@ -35,15 +35,9 @@
           </a>
       </td>
       <td td-data-table-cell>
-        {{row['forename']}}
+        {{row['forename']}}  {{row['surname']}}
       </td>
-      <td td-data-table-cell>
-          {{row['surname']}}
-      </td>
-      <td td-data-table-cell>
-          {{row['notes']}}
-      </td>
-      <td class="menu-choices" td-data-table-cell
+            <td class="menu-choices" td-data-table-cell
        *ngFor="let column of menuChoiceColumns()" [attr.numeric]="column.numeric">
        <div class="menu-choices">
           <div class="add-menu-item">

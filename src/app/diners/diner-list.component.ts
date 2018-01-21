@@ -1,3 +1,4 @@
+import { DateFormatPipe, TimeFormatPipe } from './../components/pipes';
 import { NotificationsService } from 'angular2-notifications';
 import { DinerService } from '../services/DinerService';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -31,6 +32,7 @@ import { ITdDynamicElementConfig, TdDynamicElement, TdDynamicType,
 import {Directive, Input, ViewChild} from '@angular/core';
 import { DinerUpdateDialog } from './diner-update-dialog.component';
 import { MenuChoiceDialog } from './menu-choice-dialog.component';
+import { DataService } from '../services/DataService';
 
 /* TODO: Fix sorting Currently only sorts one way doesn't switch to reverse when you try to sort by a column twice */
 
@@ -44,12 +46,14 @@ import { MenuChoiceDialog } from './menu-choice-dialog.component';
 })
 export class DinersListComponent implements OnInit, OnDestroy   {
 
+myEmailAddress: string;
+myFirstName: string;
+mySurname: string;
+
 data: any[] = [];
 columns: ITdDataTableColumn[] =
   [
-    { name: 'forename', label: 'Forename', width: 150},
-    { name: 'surname', label: 'Surname', width: 150},
-    { name: 'notes', label: 'Notes', width: 150}
+    { name: 'name', label: 'Name', class: 'name-column'}
   ];
 
   filteredData: any[] = this.data;
@@ -83,14 +87,15 @@ columns: ITdDataTableColumn[] =
       private _router: Router,
       private _dataTableService: TdDataTableService,
       private _dialogService: TdDialogService,
-      private _dialog: MatDialog
+      private _dialog: MatDialog,
+      private _data: DataService
   ) {
       this.message = 'Diners';
   }
 
    openDialog(row: any) {
       const dialogRef = this._dialog.open(DinerUpdateDialog, {
-      height: '700px',
+      height: '560px',
       width: '700px',
       disableClose: false
     });
@@ -120,6 +125,8 @@ columns: ITdDataTableColumn[] =
           dinerToAdd.forename = result.forename;
           dinerToAdd.surname = result.surname;
           dinerToAdd.notes = result.notes;
+          dinerToAdd.addedByEmailAddress = this.myEmailAddress;
+          dinerToAdd.addedAt = new Date();
           this.data.push(dinerToAdd);
           this.filter();
         }
@@ -162,6 +169,17 @@ deleteMenuItem(dinerMenuItemId: number, dinerId: number, columnName: string) {
 
   ngOnInit(): void {
     this.loadData();
+    this._data.myEmailAddress.subscribe(message => this.myEmailAddress = message);
+    this._data.myFirstName.subscribe(message => this.myFirstName = message);
+    this._data.mySurname.subscribe(message => this.mySurname = message);
+  }
+
+  myDetails(): string {
+    if (this.myEmailAddress && this.myFirstName && this.mySurname) {
+      return 'My Email Address: ' + this.myEmailAddress + ', My name: ' + this.myFirstName + ' ' + this.mySurname;
+    } else {
+      return '';
+    }
   }
 
   setColumnsAndData() {
@@ -169,8 +187,20 @@ deleteMenuItem(dinerMenuItemId: number, dinerId: number, columnName: string) {
       this.menuSections.forEach(menuSection => {
         this.columns.push({ name: menuSection.name, label: menuSection.name, class: 'menu-item-table-header' });
       });
+
+      const dateFormatPipeFilter = new DateFormatPipe();
+      const timeFormatPipeFilter = new TimeFormatPipe();
       this.booking.diners.forEach(diner => {
-        const dinerDetails = { id: diner.id, forename: diner.forename, surname: diner.surname, notes: diner.notes };
+        const dinerDetails = {
+          id: diner.id,
+          forename: diner.forename,
+          surname: diner.surname,
+          notes: diner.notes,
+          addedAt: dateFormatPipeFilter.transform(diner.addedAt.toString()) + ' ' +
+          timeFormatPipeFilter.transform(diner.addedAt.toString()),
+          addedByEmailAddress: diner.addedByEmailAddress
+        };
+
         diner.menuSectionMenuItems.forEach(menuSectionMenuItem => {
           const menuChoices = [];
                 menuSectionMenuItem.dinerMenuItems.forEach(dinerMenuItem => {
@@ -187,7 +217,7 @@ deleteMenuItem(dinerMenuItemId: number, dinerId: number, columnName: string) {
   }
 
   menuChoiceColumns(): ITdDataTableColumn[] {
-    return this.columns.filter(c => c.name !== 'forename' && c.name !== 'surname' && c.name !== 'notes');
+    return this.columns.filter(c => c.name !== 'name');
   }
 
   sort(sortEvent: ITdDataTableSortChangeEvent): void {

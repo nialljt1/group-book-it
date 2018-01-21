@@ -53,6 +53,10 @@ th {
   width: 40px;
 }
 
+.name-column {
+  width: 150px;
+}
+
 td {
   text-align: left;
   font-family: Lato-Regular;

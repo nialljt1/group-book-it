@@ -1,3 +1,4 @@
+import { DataService } from './services/DataService';
 import { DinerUpdateDialog } from './diners/diner-update-dialog.component';
 import { NotificationsService } from 'angular2-notifications';
 import { DinersListComponent } from './diners/diner-list.component';
@@ -104,7 +105,8 @@ const appRoutes: Routes = [
     MenuSectionsService,
     TdDataTableService,
     TdDialogService,
-    NotificationsService
+    NotificationsService,
+    DataService
   ],
   exports: [
     DateFormatPipe,

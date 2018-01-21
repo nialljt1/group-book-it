@@ -1,6 +1,35 @@
+<div *ngIf="!myDetailsEntered()">
 <mat-card>
-<mat-card-title layout="row" layout-align="start center">
-  <span class="mat-title">{{title()}}</span></mat-card-title>
+  <mat-card-title layout="row" layout-align="start center">
+    <span class="mat-title">Enter your details</span>
+  </mat-card-title>
+  <mat-card-subtitle>In order to add or edit diners you must first enter your name and email address.</mat-card-subtitle>
+  <mat-divider></mat-divider>
+  <mat-card-content class="push-bottom-none">
+    <td-dynamic-forms [elements]="myDetailsTextElements" #myDetailsForm>
+      <ng-template let-element ngFor [ngForOf]="myDetailsTextElements">
+        <ng-template let-control="control" [tdDynamicFormsError]="element.name">
+          <span *ngIf="control.touched || !control.pristine">
+            <span *ngIf="control.hasError('minlength')">Min length value: {{element.minLength}}</span>
+            <span *ngIf="control.hasError('maxlength')">Max length value: {{element.minLength}}</span>
+          </span>
+        </ng-template>
+      </ng-template>
+    </td-dynamic-forms>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <div layout="row">
+      <button mat-button color="primary" (click)="addMyDetails()">NEXT</button>
+      <button mat-button mat-button (click)="cancel()">CANCEL</button>
+    </div>
+  </mat-card-actions>
+</mat-card>
+</div>
+<mat-card *ngIf="myDetailsEntered()">
+  <mat-card-title layout="row" layout-align="start center">
+    <span class="mat-title">{{title()}}</span>
+  </mat-card-title>
   <mat-card-subtitle>Fill form to update diner details</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content class="push-bottom-none">
@@ -23,7 +52,7 @@
     <div layout="row">
       <button mat-button color="primary" (click)="save()">SAVE</button>
       <button mat-button mat-button (click)="cancel()">CANCEL</button>
-      <button mat-button mat-button (click)="delete()">DELETE</button>
+      <button *ngIf="isUpdateDiner" mat-button mat-button (click)="delete()">DELETE</button>
     </div>
   </mat-card-actions>
 </mat-card>
