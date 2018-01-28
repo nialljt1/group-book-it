@@ -38,6 +38,7 @@ import { PageNotFoundComponent } from './pageNotFound/pageNotFound.component';
 import { SecurityService } from './services/SecurityService';
 import { MenuSectionsService } from './services/MenuSectionsService';
 import { MenuChoiceDialog } from './diners/menu-choice-dialog.component';
+import { DinersListGridComponent } from './diners/components/diner-list-grid.component';
 
 const appRoutes: Routes = [
   { path: 'restaurant', component: RestaurantComponent },
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
     PageNotFoundComponent,
     MenuChoiceDialog,
     DinerUpdateDialog,
+    DinersListGridComponent,
     DateFormatPipe,
     TimeFormatPipe
   ],
