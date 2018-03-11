@@ -35,6 +35,9 @@ export class DataService implements OnInit {
   private bsDinerData = new BehaviorSubject<any>([]);
   dinerData: Observable<any> = this.bsDinerData.asObservable();
 
+  private bsBooking = new BehaviorSubject<any>([]);
+  bookingData: Observable<any> = this.bsBooking.asObservable();
+
   columns: ITdDataTableColumn[] =
   [
     { name: 'name', label: 'Name', class: 'name-column'}
@@ -71,6 +74,7 @@ export class DataService implements OnInit {
             this._bookingsService.GetById(id)
                 .subscribe(json => {
                   this.booking = new Booking().deserialize(json.data, json.included);
+                  this.bsBooking.next(this.booking);
                   Observable.forkJoin(
                       this._menuSectionsService.GetForMenu(this.booking.menuId),
                       this._dinerMenuItemsService.GetForBooking(this.booking.id)

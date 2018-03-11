@@ -4,10 +4,10 @@ import { DinerService } from './../services/DinerService';
 import { Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Diner } from '../models/diner';
-import { ITdDynamicElementConfig, TdDynamicElement, TdDynamicType,
-  ITdDynamicElementValidator, TdDynamicFormsComponent } from '@covalent/dynamic-forms';
-  import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-  import { DataService } from '../services/DataService';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { DataService } from '../services/DataService';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 
  @Component({
   // tslint:disable-next-line:component-selector
@@ -25,73 +25,25 @@ export class DinerUpdateDialog implements OnInit {
     private centralData: DataService
   ) {}
 
-  @ViewChild('myDetailsForm')
-  _myDetailsForm: TdDynamicFormsComponent;
-
-  @ViewChild('dinerForm')
-  _dinerForm: TdDynamicFormsComponent;
-
   public id: number;
   public forename: string;
   public surname: string;
   public notes: string;
   public bookingId: string;
   public isUpdateDiner: boolean;
-  public reuseName: boolean;
-
-  myDetailsTextElements: ITdDynamicElementConfig[] = [
-    {
-    name: 'myFirstName',
-    label: 'Forename',
-    type: TdDynamicElement.Input,
-    required: true,
-    maxLength: 30
-  },
-  {
-    name: 'mySurname',
-    label: 'Surname',
-    type: TdDynamicElement.Input,
-    required: true,
-    maxLength: 30
-  },
-  {
-    name: 'myEmailAddress',
-    label: 'Email address',
-    type: TdDynamicElement.Input,
-    required: true,
-    maxLength: 100
-  },
-  {
-    name: 'reuseName',
-    label: 'Use my name when adding first diner',
-    type: TdDynamicElement.Checkbox,
-    default: true
-  }
- ];
-
-  textElements: ITdDynamicElementConfig[] = [
-    {
-    name: 'Forename',
-    type: TdDynamicElement.Input,
-    required: true,
-    maxLength: 30
-  },
-  {
-    name: 'Surname',
-    type: TdDynamicElement.Input,
-    required: true,
-    maxLength: 30
-  },
-  {
-    name: 'Notes',
-    type: TdDynamicElement.Textarea,
-    required: false
-  }
- ];
+  public reuseName: boolean = true;
 
  myEmailAddress: string;
  myFirstName: string;
  mySurname: string;
+
+ userForename: string;
+ userSurname: string;
+ userEmailAddress: string;
+
+ dinerForename: string;
+ dinerSurname: string;
+ dinerNotes: string;
 
  ngOnInit() {
   this.centralData.myEmailAddress.subscribe(myEmailAddress => this.myEmailAddress = myEmailAddress);
@@ -122,21 +74,22 @@ myDetailsEntered(): boolean {
   }
 
   addMyDetails(): void {
-    const myFirstName = this._myDetailsForm.value.myFirstName;
-    const mySurname = this._myDetailsForm.value.mySurname;
-    this.centralData.updateMyDetails(this._myDetailsForm.value.myEmailAddress, myFirstName, mySurname);
-    if (this._myDetailsForm.value.reuseName) {
-      this.textElements[0].default = myFirstName;
-      this.textElements[1].default = mySurname;
+    const myFirstName = this.userForename;
+    const mySurname = this.userSurname;
+    const myEmailAddress = this.userEmailAddress;
+    this.centralData.updateMyDetails(myEmailAddress, myFirstName, mySurname);
+    if (this.reuseName) {
+      this.dinerForename = myFirstName;
+      this.dinerSurname = mySurname;
     }
   }
 
   save() {
         const diner = new Diner();
         diner.id = this.id;
-        diner.forename = this._dinerForm.value.Forename;
-        diner.surname = this._dinerForm.value.Surname;
-        diner.notes = this._dinerForm.value.Notes;
+        diner.forename = this.dinerForename;
+        diner.surname = this.dinerSurname;
+        diner.notes = this.dinerNotes;
         diner.lastUpdatedAt = new Date();
         diner.lastUpdatedByEmailAddress = this.myEmailAddress;
         if (!this.isUpdateDiner) {

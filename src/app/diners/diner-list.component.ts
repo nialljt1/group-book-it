@@ -23,6 +23,9 @@ import { DinersListGridComponent} from './components/diner-list-grid.component';
 import { MenuChoiceDialog } from './menu-choice-dialog.component';
 import { DataService } from '../services/DataService';
 import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material';
+import { HttpClientModule  } from '@angular/common/http';
 
 /* TODO: Fix sorting Currently only sorts one way doesn't switch to reverse when you try to sort by a column twice */
 
@@ -69,12 +72,20 @@ public showEditPanel = false;
       private _dataTableService: TdDataTableService,
       private _dialogService: TdDialogService,
       private _dialog: MatDialog,
-      private _dataService: DataService
+      private _dataService: DataService,
+      private iconRegistry: MatIconRegistry,
+      private sanitizer: DomSanitizer
   ) {
+      iconRegistry.addSvgIcon(
+      'thumbs-up',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/examples/thumbup-icon.svg'));
       this.loadData();
   }
 
   ngOnInit() {
+    this._dataService.myEmailAddress.subscribe(message => {
+      this.myEmailAddress = message;
+    });
     this.myDinersComponent.noResultsMessage = 'You haven\'t added any diners.';
     this.myDinersComponent.gridHeader = 'Diners that I have added';
     this.myDinersComponent.isMyDiners = true;
@@ -84,11 +95,7 @@ public showEditPanel = false;
   }
 
   combinedTotal() {
-    return this.myDinersComponent.filteredTotal + this.otherDinersComponent.filteredTotal;
-  }
-
-  openDialog(row: any) {
-    this.myDinersComponent.openDialog(row);
+    return this.myDinersComponent.data.length;
   }
 
 loadData(): void {

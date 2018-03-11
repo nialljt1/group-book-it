@@ -1,0 +1,19 @@
+<div class="booking-details-section">
+  <div class="_669l32"><span>Booking Details</span></div>
+  <div class="_1hk8hdj2"><span>Date and Time: {{ booking.startingAtDate }} at {{ booking.startingAtTime }}</span></div>
+  <div class="_1hk8hdj2">Estimated number of diners: {{ booking.numberOfDiners }}</div>
+</div>
+<div class="booking-details-section">
+  <div class="_669l32"><span>Organiser</span></div>
+  <div class="_1hk8hdj2">Name: {{ booking.organiser.fullName }}</div>
+  <div class="_1hk8hdj2">Email address: {{ booking.organiser.emailAddress }}</div>
+  <div class="_1hk8hdj2">Telephone Number: {{ booking.organiser.telephoneNumber }}</div>
+</div>
+<div class="booking-details-section">
+  <div class="_669l32"><span>Restaurant</span></div>
+  <div class="_1hk8hdj2">Address: 123 bridge street, Stratford-Upon-Avon, CV37 9DF</div>
+  <div class="_1hk8hdj2">Email address: test@test.com</div>
+  <div class="_1hk8hdj2">Telephone Number: 01234 567891</div>
+</div>
+<button mat-raised-button color="primary" (click)="close()" class="push-bottom text-upper">Close</button>
+

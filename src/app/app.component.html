@@ -1,4 +1,4 @@
-<td-layout>
+<td-layout #layout>
   <td-navigation-drawer flex sidenavTitle="Group Book It" logo="assets:teradata">
       <mat-nav-list>
         <ng-template let-item let-last="last" ngFor [ngForOf]="routes">
@@ -6,10 +6,17 @@
         </ng-template>
       </mat-nav-list>
     </td-navigation-drawer>
-    <td-layout-nav logo="assets:teradata" toolbarTitle="Group Book It" navigationRoute="/">
-      <button mat-icon-button td-menu-button tdLayoutToggle>
-        <mat-icon>menu</mat-icon>
-      </button>
-      <router-outlet></router-outlet>
-    </td-layout-nav>
+    <td-layout-nav-list #navList [sidenavWidth]="'0px'">
+        <div td-toolbar-content layout="row" layout-align="start center" flex>
+          <div style="display: none;">
+            <button mat-icon-button td-menu-button tdLayoutToggle>
+                <mat-icon>menu</mat-icon>
+              </button>
+            </div>
+            <span class="title">Group Book It</span>
+          </div>
+          <mat-sidenav-container>
+                <router-outlet></router-outlet>
+            </mat-sidenav-container>
+      </td-layout-nav-list>
 </td-layout>

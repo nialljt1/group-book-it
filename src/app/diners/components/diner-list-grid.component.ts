@@ -21,11 +21,15 @@ import {Directive, Input, ViewChild} from '@angular/core';
 import { DinerUpdateDialog } from './../diner-update-dialog.component';
 import { MenuChoiceDialog } from './../menu-choice-dialog.component';
 import { DataService } from '../../services/DataService';
+import { BookingDetailsComponent } from './booking-details.component';
 
 /* TODO: Fix sorting Currently only sorts one way doesn't switch to reverse when you try to sort by a column twice */
 
 @Component({
     selector: 'app-diner-list-grid',
+    // host: {
+    //   '(document:click)': 'handleClick($event)',
+    //    },
     templateUrl: 'diner-list-grid.component.html',
     styleUrls: [
       'diner-list-grid.component.css',
@@ -55,10 +59,14 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
   selectedRows: any[] = [];
   sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
 
+  showBookingDetails: boolean = false;
+
   public message: string;
   private sub: any;
   public downloadUrl: string;
   public showEditPanel = false;
+
+  public expandedDiners: Diner[] = [];
 
     constructor(
         private _dinerMenuItemsService: DinerMenuItemsService,
@@ -74,21 +82,37 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
     }
 
     ngOnInit(): void {
-      this._dataService.myEmailAddress.subscribe(message => this.myEmailAddress = message);
+      this._dataService.myEmailAddress.subscribe(message => {
+          this.myEmailAddress = message;
+          this.loadData();
+        });
       this._dataService.myFirstName.subscribe(message => this.myFirstName = message);
       this._dataService.mySurname.subscribe(message => this.mySurname = message);
       this._dataService.dinerData.subscribe(message => {
-          if (this.isMyDiners) {
-            this.data = message.filter(s => s.addedByEmailAddress === this.myEmailAddress);
-          } else {
-            this.data = message.filter(s => s.addedByEmailAddress !== this.myEmailAddress);
-          }
-
+          this.data = message;
           this.filteredData = this.data;
           this.filteredTotal = this.data.length;
+          this.filter();
         }
       );
     }
+
+    showHideBookingDetails() {
+      this.showBookingDetails = !this.showBookingDetails;
+
+      if (this.showBookingDetails) {
+        const dialogRef = this._dialog.open(BookingDetailsComponent, {
+          height: '500px',
+          width: '560px',
+          disableClose: false
+          });
+
+          dialogRef.beforeClose().subscribe(result => {
+            this.showBookingDetails = false;
+          })
+      }
+    }
+
 
     openDialog(row: any) {
       const dialogRef = this._dialog.open(DinerUpdateDialog, {
@@ -98,9 +122,9 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
       });
 
       dialogRef.componentInstance.id = row.id;
-      dialogRef.componentInstance.textElements[0].default = row.forename;
-      dialogRef.componentInstance.textElements[1].default = row.surname;
-      dialogRef.componentInstance.textElements[2].default = row.notes;
+      dialogRef.componentInstance.dinerForename = row.forename;
+      dialogRef.componentInstance.dinerSurname = row.surname;
+      dialogRef.componentInstance.dinerNotes = row.notes;
       dialogRef.componentInstance.isUpdateDiner = (row.id != null);
 
       dialogRef.afterClosed().subscribe(result => {
@@ -119,11 +143,15 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
           } else {
             const dinerToAdd = new Diner();
             dinerToAdd.id = result.id;
+            dinerToAdd.id = result.id;
             dinerToAdd.forename = result.forename;
             dinerToAdd.surname = result.surname;
             dinerToAdd.notes = result.notes;
             dinerToAdd.addedByEmailAddress = this.myEmailAddress;
             dinerToAdd.addedAt = new Date();
+            this.menuChoiceColumns().forEach(column => {
+              dinerToAdd[column.name] = [];
+            });
             this.data.push(dinerToAdd);
             this.filter();
           }
@@ -139,6 +167,7 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
     });
 
    dialogRef.componentInstance.dinerId = row.id;
+   dialogRef.componentInstance.dinerName = row.forename + " " + row.surname;
    dialogRef.componentInstance.menuSectionName = column;
    dialogRef.componentInstance.tableData = this._dataService.menuSections.find(s => s.name === column.name).menuItems;
    dialogRef.componentInstance.filteredData =  dialogRef.componentInstance.tableData;
@@ -149,6 +178,16 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
       diner[column.name].push(result);
     }
     });
+  }
+
+  getCountMenuChoices(row: any): number {
+    let menuChoiceCount = 0;
+
+    this.menuChoiceColumns().forEach(column => {
+      menuChoiceCount += row[column.name].length;
+    });
+
+    return menuChoiceCount;
   }
 
   deleteMenuItem(dinerMenuItemId: number, dinerId: number, columnName: string) {
@@ -208,10 +247,32 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
       return column.name;
     });
     newData = this._dataTableService.filterData(newData, this.searchTerm, true, excludedColumns);
-    this.filteredTotal = newData.length;
     newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
     newData = this._dataTableService.pageData(newData, this.fromRow, this.currentPage * this.pageSize);
+    if (this.isMyDiners) {
+      if (this.myEmailAddress) {
+        newData = this.data.filter(s => s.addedByEmailAddress === this.myEmailAddress);
+      } else {
+        newData = [];
+      }
+
+    } else {
+      newData = this.data.filter(s => s.addedByEmailAddress !== this.myEmailAddress);
+    }
+    this.filteredTotal = newData.length;
     this.filteredData = newData;
+  }
+
+  expandRow(row: any): void {
+    if (!this.isExpanded(row)) {
+      this.expandedDiners.push(row);
+    } else {
+      this.expandedDiners.splice(row);
+    }
+  }
+
+  isExpanded(row: any): boolean {
+    return this.expandedDiners.indexOf(row) !== -1;
   }
 
   ngOnDestroy() {

@@ -1,23 +1,11 @@
   <mat-card tdMediaToggle="gt-xs">
-  <div layout="row" layout-align="start center" class="pad-left-sm pad-right-sm">
-    <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
-      <span class="mat-title">List of diners</span>
-      <a color="accent" mat-mini-fab  (click)="openDialog({})">
-        <mat-icon>add</mat-icon>
-    </a>
-    </span>
-    <span class="diners-count">Number of diners: {{ combinedTotal() }}</span><div>{{ myDetails() }}</div>
-    <span *ngIf="!searchBox.searchVisible" class="push-left-sm">
-      <span *ngIf="selectedRows.length && selectable" class="mat-body-1">0 item(s) selected</span>
-    </span>
-    <td-search-box #searchBox backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)" flex>
-    </td-search-box>
+  <div>
+    <mat-divider></mat-divider>
+
+
+    <app-diner-list-grid #myDinersComponent></app-diner-list-grid>
+    <mat-divider></mat-divider>
   </div>
-  <mat-divider></mat-divider>
-  <app-diner-list-grid #myDinersComponent></app-diner-list-grid>
-  <mat-divider></mat-divider>
   <app-diner-list-grid #otherDinersComponent></app-diner-list-grid>
+
   </mat-card>
-  <a mat-fab color="accent" class="mat-fab-bottom-right fixed" [routerLink]="['add']">
-      <mat-icon>add</mat-icon>
-  </a>

@@ -1,8 +1,83 @@
-<h1>{{ gridHeader }}</h1>
-<div *ngIf="filteredTotal > 0" class="container-table">
+
+
+<div *ngIf="isMyDiners" class="menu-bar">
+  <div class="top-row-buttons">
+      <button mat-raised-button color="primary"  (click)="showHideBookingDetails()" class="push-bottom text-upper">Show Booking Details</button>
+      <button mat-raised-button color="primary" style="margin-left:8px;" (click)="openDialog({})" class="push-bottom text-upper">Add diner</button>
+  </div>
+</div>
+
+<div *ngIf="isMyDiners" class="header">
+    <h4 class="title">List of diners (Total number of diners: {{ data.length }}) </h4>
+</div>
+<mat-card-title class="list-title">{{ gridHeader }}</mat-card-title>
+
+<div class="card">
+
+<div id="mobile-diners">
+        <div class="content">
+            <div class="row">
+
+    <div class="content table-responsive">
+    <table class="table">
+    <tbody>
+    <ng-container *ngFor="let row of filteredData">
+    <tr>
+        <td *ngIf="isMyDiners"class="diner-row-cell">
+            <a mat-mini-fab color="accent" (click)="openDialog(row)">
+                <mat-icon>edit</mat-icon>
+            </a>
+        </td>
+      <td class="diner-row-cell">
+          {{row['forename']}} {{row['surname']}}
+      </td>
+      <td class="diner-row-cell text-right">
+          {{ getCountMenuChoices(row) }} choices
+
+      </td>
+      <td class="diner-row-cell">
+          <mat-icon *ngIf="!isExpanded(row)" (click)="expandRow(row)">keyboard_arrow_down</mat-icon>
+          <mat-icon *ngIf="isExpanded(row)" (click)="expandRow(row)">keyboard_arrow_up</mat-icon>
+      </td>
+    </tr>
+    <tr *ngIf="isExpanded(row)">
+        <td colspan="3">
+          <div class="diner-menu-details">
+            <div *ngFor="let column of menuChoiceColumns()">
+                <mat-list-item>
+                    <h4 matLine class="diner-name"> {{column['name']}}
+                        <ng-container *ngIf="isMyDiners" class="add-menu-item">
+                            <button mat-raised-button color="primary" (click)="addMenuItem(row, column)" class="push-bottom text-upper">Add</button>
+                            </ng-container>
+                    </h4>
+                  </mat-list-item>
+                  <div class="mat-padding" *ngIf="row[column.name] && row[column.name].length === 0" layout="row" layout-align="left center">
+                      <p class="mat-subhead tc-grey-600 mobile-none-chosen">None chosen</p>
+                    </div>
+                    <div class="menu-choices" *ngIf="row[column.name] && row[column.name].length > 0" >
+                        <ul class="meal-list-mobile">
+                          <li *ngFor="let choice of row[column.name]">{{choice.name}}
+                              <button *ngIf="isMyDiners" mat-icon-button (click)="deleteMenuItem(choice.id, row.id, column.name)"><mat-icon>delete</mat-icon></button>
+                          </li>
+                        </ul>
+                    </div>
+                  </div>
+                </div>
+        </td>
+     </tr>
+    </ng-container>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    </div>
+
+<div id="desktop-diners">
+<div *ngIf="filteredTotal > 0 && (myEmailAddress || !isMyDiners)" class="container-table">
   <div class="ver1">
     <table td-data-table style="width:100%;" cellspacing="0" cellpadding="0">
-      <th class="first-column"></th>
+      <th *ngIf="isMyDiners" class="first-column"></th>
       <th td-data-table-column
          *ngFor="let column of _dataService.columns"
           [attr.name]="column.name"
@@ -14,26 +89,26 @@
       </th>
       <ng-container *ngFor="let row of filteredData; let index=index; let odd=odd; let even=even;">
       <tr td-data-table-row  [ngClass]="{ odd: odd, even: even }">
-        <td class="first-column">
+        <td *ngIf="isMyDiners" class="first-column">
             <a mat-mini-fab color="accent" (click)="openDialog(row)">
                 <mat-icon>edit</mat-icon>
             </a>
         </td>
-        <td td-data-table-cell>
+        <td td-data-table-cell class="name-column">
           {{row['forename']}}  {{row['surname']}}
         </td>
-              <td class="menu-choices" td-data-table-cell
+        <td class="menu-choices" td-data-table-cell
          *ngFor="let column of menuChoiceColumns()" [attr.numeric]="column.numeric">
          <div class="menu-choices">
-            <div class="add-menu-item">
-                <a mat-mini-fab color="accent" (click)="addMenuItem(row, column)">
-                    <mat-icon>add</mat-icon>
-                </a>
-              </div>
+            <div *ngIf="isMyDiners" class="add-menu-item">
+                <button style="min-width:32px;" mat-raised-button color="primary" (click)="addMenuItem(row, column)">
+                  <mat-icon>add</mat-icon>
+              </button>
+            </div>
           <div class="menu-choices">
           <ul>
             <li *ngFor="let choice of row[column.name]">{{choice.name}}
-                <button mat-icon-button (click)="deleteMenuItem(choice.id, row.id, column.name)"><mat-icon>delete</mat-icon></button>
+                <button *ngIf="isMyDiners" mat-icon-button (click)="deleteMenuItem(choice.id, row.id, column.name)"><mat-icon>delete</mat-icon></button>
             </li>
           </ul>
           </div>
@@ -44,11 +119,20 @@
     </table>
   </div>
     </div>
-    <div class="mat-padding" *ngIf="filteredTotal == 0" layout="row" layout-align="center center">
-      <h3>{{ noResultsMessage }}</h3>
-    </div>
+
+
 
   <!-- <td-paging-bar #pagingBar [pageSizes]="[5, 10, 15, 20]" [total]="filteredTotal" (change)="page($event)">
     <span td-paging-bar-label hide-xs>Row per page:</span>
     {{pagingBar.range}} <span hide-xs>of {{pagingBar.total}}</span>
   </td-paging-bar> -->
+</div>
+
+<div class="mat-padding" *ngIf="filteredTotal == 0 && myEmailAddress" layout="row" layout-align="center center">
+    <p class="mat-subhead tc-grey-600">{{ noResultsMessage }}</p>
+  </div>
+  <div class="mat-padding" *ngIf="isMyDiners && !myEmailAddress" layout="row" layout-align="center center">
+      <p class="mat-subhead tc-grey-600">To add new diners or see diners that you have previously added
+        then please set your name and email address by clicking <button mat-raised-button color="primary" (click)="openDialog({})" class="push-bottom text-upper">Set profile</button></p>
+    </div>
+</div>

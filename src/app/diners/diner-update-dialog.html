@@ -6,22 +6,76 @@
   <mat-card-subtitle>In order to add or edit diners you must first enter your name and email address.</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content class="push-bottom-none">
-    <td-dynamic-forms [elements]="myDetailsTextElements" #myDetailsForm>
-      <ng-template let-element ngFor [ngForOf]="myDetailsTextElements">
-        <ng-template let-control="control" [tdDynamicFormsError]="element.name">
-          <span *ngIf="control.touched || !control.pristine">
-            <span *ngIf="control.hasError('minlength')">Min length value: {{element.minLength}}</span>
-            <span *ngIf="control.hasError('maxlength')">Max length value: {{element.minLength}}</span>
-          </span>
-        </ng-template>
-      </ng-template>
-    </td-dynamic-forms>
+    <form #userForm="ngForm">
+      <div layout="row" class="push-top">
+          <mat-form-field flex>
+            <input matInput
+                    #userForenameElement
+                    #userForenameControl="ngModel"
+                    type="text"
+                    placeholder="Forename"
+                    [(ngModel)]="userForename"
+                    name="userForename"
+                    maxlength="30"
+                    required>
+            <mat-hint align="start">
+              <span [hidden]="userForenameControl.pristine" class="tc-red-600">
+                <span [hidden]="!userForenameControl.hasError('required')">Required</span>
+              </span>
+            </mat-hint>
+            <mat-hint align="end">{{userForenameElement.value.length}} / 30</mat-hint>
+          </mat-form-field>
+       </div>
+      <div layout="row" class="push-top">
+          <mat-form-field flex>
+            <input matInput
+                    #userSurnameElement
+                    #userSurnameControl="ngModel"
+                    type="text"
+                    placeholder="Surname"
+                    [(ngModel)]="userSurname"
+                    name="userSurname"
+                    maxlength="30"
+                    required>
+            <mat-hint align="start">
+              <span [hidden]="userSurnameControl.pristine" class="tc-red-600">
+                <span [hidden]="!userSurnameControl.hasError('required')">Required</span>
+              </span>
+            </mat-hint>
+            <mat-hint align="end">{{userSurnameElement.value.length}} / 30</mat-hint>
+          </mat-form-field>
+       </div>
+    <div layout="row" class="push-top">
+        <mat-form-field flex>
+          <input matInput
+                  #userEmailAddressElement
+                  #userEmailAddressControl="ngModel"
+                  type="text"
+                  placeholder="Email"
+                  [(ngModel)]="userEmailAddress"
+                  name="userEmailAddress"
+                  maxlength="50"
+                  pattern="^[a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,15})$"
+                  required>
+          <mat-hint align="start">
+            <span [hidden]="userEmailAddressControl.pristine" class="tc-red-600">
+              <span [hidden]="!userEmailAddressControl.hasError('required')">Required</span>
+              <span [hidden]="!userEmailAddressControl.hasError('pattern')">Invalid email address</span>
+            </span>
+          </mat-hint>
+          <mat-hint align="end">{{userEmailAddressElement.value.length}} / 50</mat-hint>
+        </mat-form-field>
+     </div>
+     <div layout="row">
+        <mat-slide-toggle [(ngModel)]="reuseName" name="reuseName">Use my name when adding first diner</mat-slide-toggle>
+      </div>
+    </form>
   </mat-card-content>
   <mat-divider></mat-divider>
   <mat-card-actions>
     <div layout="row">
-      <button mat-button color="primary" (click)="addMyDetails()">NEXT</button>
-      <button mat-button mat-button (click)="cancel()">CANCEL</button>
+      <button [disabled]="!userForm.form.valid" mat-raised-button color="primary" (click)="addMyDetails()">NEXT</button>
+      <button mat-raised-button color="accent" (click)="cancel()">CANCEL</button>
     </div>
   </mat-card-actions>
 </mat-card>
@@ -33,16 +87,60 @@
   <mat-card-subtitle>Fill form to update diner details</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content class="push-bottom-none">
-    <td-dynamic-forms [elements]="textElements" #dinerForm>
-      <ng-template let-element ngFor [ngForOf]="textElements">
-        <ng-template let-control="control" [tdDynamicFormsError]="element.name">
-          <span *ngIf="control.touched || !control.pristine">
-            <span *ngIf="control.hasError('minlength')">Min length value: {{element.minLength}}</span>
-            <span *ngIf="control.hasError('maxlength')">Max length value: {{element.minLength}}</span>
-          </span>
-        </ng-template>
-      </ng-template>
-    </td-dynamic-forms>
+      <form #dinerForm="ngForm">
+          <div layout="row" class="push-top">
+              <mat-form-field flex>
+                <input matInput
+                        #dinerForenameElement
+                        #dinerForenameControl="ngModel"
+                        type="text"
+                        placeholder="Forename"
+                        [(ngModel)]="dinerForename"
+                        name="dinerForename"
+                        maxlength="30"
+                        required>
+                <mat-hint align="start">
+                  <span [hidden]="dinerForenameControl.pristine" class="tc-red-600">
+                    <span [hidden]="!dinerForenameControl.hasError('required')">Required</span>
+                  </span>
+                </mat-hint>
+                <mat-hint align="end">{{dinerForenameElement.value.length}} / 30</mat-hint>
+              </mat-form-field>
+           </div>
+           <div layout="row" class="push-top">
+              <mat-form-field flex>
+                <input matInput
+                        #dinerSurnameElement
+                        #dinerSurnameControl="ngModel"
+                        type="text"
+                        placeholder="Surname"
+                        [(ngModel)]="dinerSurname"
+                        name="dinerSurname"
+                        maxlength="30"
+                        required>
+                <mat-hint align="start">
+                  <span [hidden]="dinerSurnameControl.pristine" class="tc-red-600">
+                    <span [hidden]="!dinerSurnameControl.hasError('required')">Required</span>
+                  </span>
+                </mat-hint>
+                <mat-hint align="end">{{dinerSurnameElement.value.length}} / 30</mat-hint>
+              </mat-form-field>
+           </div>
+           <div layout="row" class="push-top">
+              <mat-form-field flex>
+                <textarea matInput
+                        #dinerNotesElement
+                        #dinerNotesControl="ngModel"
+                        type="text"
+                        placeholder="Notes"
+                        [(ngModel)]="dinerNotes"
+                        name="dinerNotes"
+                        maxlength="200">
+                        </textarea>
+                <mat-hint align="end">{{dinerNotesElement.value.length}} / 200</mat-hint>
+              </mat-form-field>
+           </div>
+      </form>
     <div layout="row">
       <mat-icon>information</mat-icon>The notes above are optional and are intended to describe any specific requirements a diner might have e.g. vegetarian, gluten free, wheelchair accessible etc.
     </div>
@@ -50,9 +148,9 @@
   <mat-divider></mat-divider>
   <mat-card-actions>
     <div layout="row">
-      <button mat-button color="primary" (click)="save()">SAVE</button>
-      <button mat-button mat-button (click)="cancel()">CANCEL</button>
-      <button *ngIf="isUpdateDiner" mat-button mat-button (click)="delete()">DELETE</button>
+      <button [disabled]="!dinerForm.form.valid" mat-raised-button color="primary" (click)="save()" class="push-bottom text-upper">SAVE</button>
+      <button  mat-raised-button color="accent" (click)="cancel()" class="push-bottom text-upper">CANCEL</button>
+      <button *ngIf="isUpdateDiner" mat-raised-button color="primary"(click)="delete()" class="push-bottom text-upper">DELETE</button>
     </div>
   </mat-card-actions>
 </mat-card>

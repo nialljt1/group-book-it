@@ -16,10 +16,11 @@ import { DateFormatPipe, TimeFormatPipe } from './components/pipes';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule,
-         MatIconModule, MatDialogModule, MatDialogRef, MatListModule } from '@angular/material';
+         MatIconModule, MatDialogModule, MatDialogRef, MatListModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule } from '@angular/material';
 
 import { CovalentLayoutModule, CovalentStepsModule, /*, any other modules */
-TdLayoutManageListComponent} from '@covalent/core';
+TdLayoutManageListComponent,
+CovalentExpansionPanelModule} from '@covalent/core';
 // (optional) Additional Covalent Modules imports
 import { CovalentHttpModule } from '@covalent/http';
 import { CovalentHighlightModule } from '@covalent/highlight';
@@ -39,6 +40,9 @@ import { SecurityService } from './services/SecurityService';
 import { MenuSectionsService } from './services/MenuSectionsService';
 import { MenuChoiceDialog } from './diners/menu-choice-dialog.component';
 import { DinersListGridComponent } from './diners/components/diner-list-grid.component';
+import { HttpClientModule  } from '@angular/common/http';
+import { BookingDetailsComponent } from './diners/components/booking-details.component';
+import { MatSidenavModule } from '@angular/material';
 
 const appRoutes: Routes = [
   { path: 'restaurant', component: RestaurantComponent },
@@ -63,13 +67,16 @@ const appRoutes: Routes = [
     PageNotFoundComponent,
     MenuChoiceDialog,
     DinerUpdateDialog,
+    BookingDetailsComponent,
     DinersListGridComponent,
     DateFormatPipe,
-    TimeFormatPipe
+    TimeFormatPipe,
+
   ],
   entryComponents:
   [
     MenuChoiceDialog,
+    BookingDetailsComponent,
     DinerUpdateDialog
   ],
   imports: [
@@ -94,9 +101,15 @@ const appRoutes: Routes = [
     CovalentMarkdownModule,
     CovalentDynamicFormsModule,
     CovalentSearchModule,
+    CovalentExpansionPanelModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatSidenavModule
   ],
   providers: [
     BookingsService,

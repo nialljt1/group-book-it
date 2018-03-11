@@ -44,8 +44,13 @@ export class MenuChoiceDialog {
     selectedRows: any[] = [];
     sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
 
-  public menuSectionName: string;
+  public menuSectionName: any;
   public dinerId: number;
+  public dinerName: string;
+
+  menuChoiceHeader () {
+    return "Selecting a choice from " + this.menuSectionName.name + " for " + this.dinerName;
+  }
 
   addMenuItem(row: any, event: any) {
     const target = event.target || event.srcElement || event.currentTarget;
