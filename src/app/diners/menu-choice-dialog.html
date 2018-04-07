@@ -9,6 +9,7 @@
                 [attr.name]="column.name"
                 [attr.sortable]="true"
                 [attr.numeric]="false"
+                [attr.class]="column.class"
                 (sortChange)="sort($event)">
                 {{column.label}}
             </th>
@@ -16,10 +17,14 @@
             <th></th>
           </tr>
           <tr td-data-table-row *ngFor="let row of filteredData">
-            <td td-data-table-cell>
+            <td td-data-table-cell >
+
                 {{row['name']}}
+                <div class="description-tooltip"  matTooltip="{{row['description']}}" style="float:right;">
+                  <mat-icon>info</mat-icon>
+                </div>
             </td>
-            <td td-data-table-cell>
+            <td td-data-table-cell class="description-column" >
               {{row['description']}}
             </td>
             <td>
@@ -36,7 +41,7 @@
         <mat-divider></mat-divider>
       </div>
     <div id="footer">
-        <button mat-raised-button color="primary" (click)="cancel({})" class="push-bottom text-upper">Close</button>
+        <button mat-raised-button color="primary" (click)="cancel()" class="push-bottom text-upper">Close</button>
     </div>
   </div>
 

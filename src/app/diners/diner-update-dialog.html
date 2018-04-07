@@ -1,4 +1,4 @@
-<div *ngIf="!myDetailsEntered()">
+<div *ngIf="!myDetailsEntered() || setProfileOnly">
 <mat-card>
   <mat-card-title layout="row" layout-align="start center">
     <span class="mat-title">Enter your details</span>
@@ -67,20 +67,24 @@
         </mat-form-field>
      </div>
      <div layout="row">
-        <mat-slide-toggle [(ngModel)]="reuseName" name="reuseName">Use my name when adding first diner</mat-slide-toggle>
+        <mat-slide-toggle [(ngModel)]="reuseName" name="reuseName">
+        </mat-slide-toggle>
+        <div class="reuseNameNote">Use my name when adding first diner</div>
       </div>
+
     </form>
   </mat-card-content>
   <mat-divider></mat-divider>
   <mat-card-actions>
     <div layout="row">
-      <button [disabled]="!userForm.form.valid" mat-raised-button color="primary" (click)="addMyDetails()">NEXT</button>
+      <button [disabled]="!userForm.form.valid" *ngIf="!setProfileOnly" mat-raised-button color="primary" (click)="addMyDetails()">NEXT</button>
+      <button [disabled]="!userForm.form.valid" *ngIf="setProfileOnly" mat-raised-button color="primary" (click)="addMyDetails()">Save</button>
       <button mat-raised-button color="accent" (click)="cancel()">CANCEL</button>
     </div>
   </mat-card-actions>
 </mat-card>
 </div>
-<mat-card *ngIf="myDetailsEntered()">
+<mat-card *ngIf="myDetailsEntered() && !setProfileOnly">
   <mat-card-title layout="row" layout-align="start center">
     <span class="mat-title">{{title()}}</span>
   </mat-card-title>

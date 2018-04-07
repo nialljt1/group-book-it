@@ -1,4 +1,3 @@
-import { NotificationsService } from 'angular2-notifications';
 import { DinerMenuItemsService } from './../services/DinerMenuItemsService';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Component, Inject } from '@angular/core';
@@ -20,16 +19,14 @@ export class MenuChoiceDialog {
   constructor(
     public dialogRef: MatDialogRef<MenuChoiceDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _dinerMenuItemsService: DinerMenuItemsService,
-    private _notificationsService: NotificationsService,
-
+    private _dinerMenuItemsService: DinerMenuItemsService
   ) { }
 
   tableData: any[] = [];
   columns: ITdDataTableColumn[] =
     [
       { name: 'name', label: 'Name'},
-      { name: 'description', label: 'Description'},
+      { name: 'description', label: 'Description', class:'description-column'},
       { name: 'quantity', label: 'Quantity'}
     ];
 
@@ -62,8 +59,6 @@ export class MenuChoiceDialog {
     // TODO: implement note
     //// dinerMenuItem.note = 'test'
     this._dinerMenuItemsService.Add(dinerMenuItem).subscribe(response =>  {
-
-      this._notificationsService.success('Menu choice added', 'You have successfully added a menu choice');
       this.dialogRef.close( {name: row.name, id : response.json().id} );
     }
   );

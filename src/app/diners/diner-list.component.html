@@ -2,10 +2,26 @@
   <div>
     <mat-divider></mat-divider>
 
+      <div class="top-row-buttons">
+          <button mat-raised-button color="primary"  (click)="showHideBookingDetails()" class="push-bottom text-upper">Show Booking Details</button>
+          <button mat-raised-button color="primary" (click)="addDiner()" class="push-bottom text-upper">Add diner</button>
+          <button mat-raised-button color="primary" (click)="showOtherDiners()" class="push-bottom text-upper"> {{ showHideOtherDinersText() }}</button>
+          <button mat-raised-button color="primary" (click)="setProfile()" class="push-bottom text-upper">Set Profile</button>
+      </div>
+    
+      <p class="welcome-message" *ngIf="booking && booking.organiser">You have been invited to Sabai Sabai on Thursday {{ booking.startingAtDate }} at {{ booking.startingAtTime }} by {{ booking.organiser.fullName }}.
+        If you wish to attend please add yourself as a diner and then add some menu choices.
+        You can also add other people who you know will be attending and whose menu choices you know or can find out.
+      </p>
+
+
+       <p *ngIf="!myEmailAddress">To add new diners or see diners that you have previously added
+            then please set your name and email address by clicking the set profile button above.
+          </p>
 
     <app-diner-list-grid #myDinersComponent></app-diner-list-grid>
     <mat-divider></mat-divider>
   </div>
-  <app-diner-list-grid #otherDinersComponent></app-diner-list-grid>
+  <app-diner-list-grid #otherDinersComponent [hidden]="!showHideOtherDiners"></app-diner-list-grid>
 
   </mat-card>

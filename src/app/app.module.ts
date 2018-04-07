@@ -1,6 +1,5 @@
 import { DataService } from './services/DataService';
 import { DinerUpdateDialog } from './diners/diner-update-dialog.component';
-import { NotificationsService } from 'angular2-notifications';
 import { DinersListComponent } from './diners/diner-list.component';
 
 import { DinerService } from './services/DinerService';
@@ -16,7 +15,7 @@ import { DateFormatPipe, TimeFormatPipe } from './components/pipes';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule,
-         MatIconModule, MatDialogModule, MatDialogRef, MatListModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule } from '@angular/material';
+         MatIconModule, MatDialogModule, MatDialogRef, MatListModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule, MatSnackBar, MatSnackBarModule, MatTooltip, MatTooltipModule } from '@angular/material';
 
 import { CovalentLayoutModule, CovalentStepsModule, /*, any other modules */
 TdLayoutManageListComponent,
@@ -50,7 +49,7 @@ const appRoutes: Routes = [
   { path: 'diners', component: DinersListComponent },
   { path: 'bookings/edit/E166F9A4-5B7B-4C9E-6513-08D45597AED5', component: BookingsEditComponent },
   { path: '',
-    redirectTo: '/welcome',
+    redirectTo: '/diners',
     pathMatch: 'full'
   },
   { path: '**', component: PageNotFoundComponent }
@@ -109,7 +108,9 @@ const appRoutes: Routes = [
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatSnackBarModule,
+    MatTooltipModule
   ],
   providers: [
     BookingsService,
@@ -120,7 +121,6 @@ const appRoutes: Routes = [
     MenuSectionsService,
     TdDataTableService,
     TdDialogService,
-    NotificationsService,
     DataService
   ],
   exports: [

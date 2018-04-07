@@ -1,5 +1,4 @@
 
-import { NotificationsService } from 'angular2-notifications';
 import { DinerService } from './../services/DinerService';
 import { Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -13,6 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle'
   // tslint:disable-next-line:component-selector
   selector: 'diner-update-dialog',
   templateUrl: 'diner-update-dialog.html',
+  styleUrls: ['diner-update-dialog.component.css']
 })
 // tslint:disable-next-line:component-class-suffix
 export class DinerUpdateDialog implements OnInit {
@@ -21,7 +21,6 @@ export class DinerUpdateDialog implements OnInit {
     public dialogRef: MatDialogRef<DinerUpdateDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _dinerService: DinerService,
-    private _notificationsService: NotificationsService,
     private centralData: DataService
   ) {}
 
@@ -32,6 +31,7 @@ export class DinerUpdateDialog implements OnInit {
   public bookingId: string;
   public isUpdateDiner: boolean;
   public reuseName: boolean = true;
+  public setProfileOnly: boolean;
 
  myEmailAddress: string;
  myFirstName: string;
@@ -68,7 +68,6 @@ myDetailsEntered(): boolean {
       const diner = new Diner();
       diner.id = this.id;
       diner.bookingId = '-1';
-      this._notificationsService.success('Diner removed', 'You have successfully removed a diner.');
       this.dialogRef.close(diner);
     });
   }
@@ -78,7 +77,10 @@ myDetailsEntered(): boolean {
     const mySurname = this.userSurname;
     const myEmailAddress = this.userEmailAddress;
     this.centralData.updateMyDetails(myEmailAddress, myFirstName, mySurname);
-    if (this.reuseName) {
+    if (this.setProfileOnly)
+    {
+      this.dialogRef.close();
+    } else if (this.reuseName) {
       this.dinerForename = myFirstName;
       this.dinerSurname = mySurname;
     }
@@ -93,20 +95,18 @@ myDetailsEntered(): boolean {
         diner.lastUpdatedAt = new Date();
         diner.lastUpdatedByEmailAddress = this.myEmailAddress;
         if (!this.isUpdateDiner) {
-          diner.bookingId = 'E166F9A4-5B7B-4C9E-6513-08D45597AED5';
+          diner.bookingId = this.centralData.bookingId;
           diner.lastUpdatedByEmailAddress = this.myEmailAddress;
           diner.lastUpdatedAt = new Date();
           diner.addedByEmailAddress = this.myEmailAddress;
           diner.addedAt = new Date();
           this._dinerService.Add(diner).subscribe(response =>  {
             diner.id = response.json().id;
-            this._notificationsService.success('Diner added', 'You have successfully added a diner.');
             this.dialogRef.close(diner);
           }
         );
         } else {
             this._dinerService.Update(diner).subscribe(response =>  {
-              this._notificationsService.success('Diner updated', 'You have successfully updated diner details.');
               this.dialogRef.close(diner);
           }
         );

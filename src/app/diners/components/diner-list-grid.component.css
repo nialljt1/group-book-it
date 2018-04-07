@@ -3,6 +3,14 @@
   height: 100%
 }
 
+.menu-choices li {
+  margin-left: 17px;
+}
+
+.menu-choices button {
+  min-width: 32px;
+}
+
 td {
   padding: 0px;
 }
@@ -49,7 +57,7 @@ th {
   font-size: 18px;
   color: #fff;
   line-height: 1.4;
-  background-color: #3f51b5;
+  background-color: #1976d2;
   padding-top: 18px;
   padding-bottom: 18px
 }
@@ -83,8 +91,12 @@ td {
 }
 
 .add-menu-item {
-  padding-top: 0px;
-  padding-bottom: 8px;
+  min-width: 32px;
+}
+
+.mobile-menu-section {
+  margin-left: 24px;
+  margin-bottom: 16px;
 }
 
 mat-icon {
@@ -102,10 +114,6 @@ mat-icon {
 
 .diner-name {
   font-weight: bold !important;
-}
-
-.mobile-none-chosen {
-  padding-left: 15px;
 }
 
 .mobile-diner-detail-divider{
@@ -204,11 +212,6 @@ table>thead>tr>td {
 
 .diner-menu-details {
   padding-bottom: 30px;
-}
-
-.top-row-buttons {
-  margin-left: 32px;
-  margin-top: 16px;
 }
 
  button {

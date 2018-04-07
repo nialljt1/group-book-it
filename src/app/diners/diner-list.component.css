@@ -87,3 +87,18 @@ mat-icon {
   margin-left: 20px;
 }
 
+.top-row-buttons {
+  margin-left: 32px;
+  margin-top: 16px;
+}
+.top-row-buttons button {
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-right: 8px;
+}
+
+p {
+  margin-top:16px;
+  margin-left:32px;
+  margin-right:32px;
+}

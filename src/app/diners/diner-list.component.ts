@@ -1,4 +1,4 @@
-import { NotificationsService } from 'angular2-notifications';
+
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Diner } from '../models/diner';
 import { DinerMenuItemsService } from '../services/DinerMenuItemsService';
@@ -27,6 +27,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { HttpClientModule  } from '@angular/common/http';
 
+import { BookingDetailsComponent } from './components/booking-details.component';
+import { Booking } from './../models/booking';
+
 /* TODO: Fix sorting Currently only sorts one way doesn't switch to reverse when you try to sort by a column twice */
 
 @Component({
@@ -52,6 +55,8 @@ data: any = [];
 filteredData: any[] = this.data;
 filteredTotal: number = this.data.length;
 
+public booking: Booking;
+
 searchTerm = '';
 fromRow = 1;
 currentPage = 1;
@@ -64,6 +69,8 @@ public message: string;
 private sub: any;
 public downloadUrl: string;
 public showEditPanel = false;
+public showHideOtherDiners: boolean;
+public showBookingDetails: boolean = false;
 
   constructor(
       private _dinerMenuItemsService: DinerMenuItemsService,
@@ -83,6 +90,12 @@ public showEditPanel = false;
   }
 
   ngOnInit() {
+    this._dataService.bookingData.subscribe(message => {
+      if (message && message.organiser)
+      {
+        this.booking = message;
+      }
+    });
     this._dataService.myEmailAddress.subscribe(message => {
       this.myEmailAddress = message;
     });
@@ -100,6 +113,38 @@ public showEditPanel = false;
 
 loadData(): void {
   this._dataService.loadData();
+}
+
+showHideOtherDinersText() {
+  return this.showHideOtherDiners ? "Hide other diners" : "Show other diners";
+}
+
+addDiner() {
+  this.myDinersComponent.openDialog({});
+}
+
+setProfile() {
+  this.myDinersComponent.openDialog({}, true);
+}
+
+showOtherDiners() {
+  this.showHideOtherDiners = !this.showHideOtherDiners;
+}
+
+showHideBookingDetails() {
+  this.showBookingDetails = !this.showBookingDetails;
+
+  if (this.showBookingDetails) {
+    const dialogRef = this._dialog.open(BookingDetailsComponent, {
+      height: '500px',
+      width: '560px',
+      disableClose: false
+      });
+
+      dialogRef.beforeClose().subscribe(result => {
+        this.showBookingDetails = false;
+      })
+  }
 }
 
 myDetails(): string {

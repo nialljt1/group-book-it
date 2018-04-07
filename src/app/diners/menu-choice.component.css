@@ -26,3 +26,35 @@
 html {
   overflow-y: scroll;
 }
+
+@media screen and (max-width: 750px) {
+  .description-column {
+    display: none;
+  }
+
+  .description-tooltip {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  .description-column {
+    display: block;
+  }
+
+  .description-tooltip {
+    display: none
+  }
+
+}
+
+.example-tooltip-host {
+  display: inline-flex;
+  align-items: center;
+  margin: 50px;
+}
+
+.description-tooltip {
+  float: right;
+}
+

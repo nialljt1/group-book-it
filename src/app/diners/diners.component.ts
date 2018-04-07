@@ -1,4 +1,3 @@
-import { NotificationsService } from 'angular2-notifications';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SecurityService } from './../services/SecurityService';
 import { MenuItem } from './../models/menuItem';

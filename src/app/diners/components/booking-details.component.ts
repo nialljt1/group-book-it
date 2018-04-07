@@ -14,7 +14,7 @@ import { DataService } from '../../services/DataService';
 export class BookingDetailsComponent implements OnInit   {
 
   public booking: Booking;
-
+  
   constructor(
     public dialogRef: MatDialogRef<BookingDetailsComponent>,
     private _dataService: DataService,

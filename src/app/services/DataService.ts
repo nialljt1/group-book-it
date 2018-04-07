@@ -30,7 +30,10 @@ export class DataService implements OnInit {
   public booking: Booking;
   public menuSections: MenuSection[];
   public dinerMenuItems: DinerMenuItem[];
-
+  // local testing id
+  // public bookingId: string = '4CC628F9-B3B8-4A27-8DBD-0CA363923E27';
+  // remote testing id
+  public bookingId: string = 'E166F9A4-5B7B-4C9E-6513-08D45597AED5';
   tempData: any = [];
   private bsDinerData = new BehaviorSubject<any>([]);
   dinerData: Observable<any> = this.bsDinerData.asObservable();
@@ -67,13 +70,14 @@ export class DataService implements OnInit {
 
     this.sub = this._route.params.subscribe(params => {
         let id = params['id'];
-        id = 'E166F9A4-5B7B-4C9E-6513-08D45597AED5';
+        id = this.bookingId;
         this.downloadUrl =  this._bookingsService.actionUrl + 'excel-export/' + id;
         if (!this.booking) {
 
             this._bookingsService.GetById(id)
                 .subscribe(json => {
                   this.booking = new Booking().deserialize(json.data, json.included);
+                  this.booking.menu.name
                   this.bsBooking.next(this.booking);
                   Observable.forkJoin(
                       this._menuSectionsService.GetForMenu(this.booking.menuId),

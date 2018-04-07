@@ -1,4 +1,3 @@
-import { NotificationsService } from 'angular2-notifications';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Diner } from '../../models/diner';
 import { DinerMenuItemsService } from '../../services/DinerMenuItemsService';
@@ -21,15 +20,13 @@ import {Directive, Input, ViewChild} from '@angular/core';
 import { DinerUpdateDialog } from './../diner-update-dialog.component';
 import { MenuChoiceDialog } from './../menu-choice-dialog.component';
 import { DataService } from '../../services/DataService';
-import { BookingDetailsComponent } from './booking-details.component';
+
+import { MatSnackBar } from '@angular/material';
 
 /* TODO: Fix sorting Currently only sorts one way doesn't switch to reverse when you try to sort by a column twice */
 
 @Component({
     selector: 'app-diner-list-grid',
-    // host: {
-    //   '(document:click)': 'handleClick($event)',
-    //    },
     templateUrl: 'diner-list-grid.component.html',
     styleUrls: [
       'diner-list-grid.component.css',
@@ -59,8 +56,6 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
   selectedRows: any[] = [];
   sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
 
-  showBookingDetails: boolean = false;
-
   public message: string;
   private sub: any;
   public downloadUrl: string;
@@ -75,7 +70,8 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
         private _dataTableService: TdDataTableService,
         private _dialogService: TdDialogService,
         private _dialog: MatDialog,
-        private _dataService: DataService
+        private _dataService: DataService,
+        public _snackBar: MatSnackBar
     ) {
         this.message = 'Diners';
         this.loadData();
@@ -97,27 +93,9 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
       );
     }
 
-    showHideBookingDetails() {
-      this.showBookingDetails = !this.showBookingDetails;
-
-      if (this.showBookingDetails) {
-        const dialogRef = this._dialog.open(BookingDetailsComponent, {
-          height: '500px',
-          width: '560px',
-          disableClose: false
-          });
-
-          dialogRef.beforeClose().subscribe(result => {
-            this.showBookingDetails = false;
-          })
-      }
-    }
-
-
-    openDialog(row: any) {
+    openDialog(row: any, setProfileOnly: boolean = false) {
       const dialogRef = this._dialog.open(DinerUpdateDialog, {
-      height: '560px',
-      width: '700px',
+      height: '512px',
       disableClose: false
       });
 
@@ -126,18 +104,30 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
       dialogRef.componentInstance.dinerSurname = row.surname;
       dialogRef.componentInstance.dinerNotes = row.notes;
       dialogRef.componentInstance.isUpdateDiner = (row.id != null);
+      dialogRef.componentInstance.setProfileOnly = setProfileOnly;
 
-      dialogRef.afterClosed().subscribe(result => {
+      if (this.myEmailAddress)
+      {
+        dialogRef.componentInstance.userForename = this.myFirstName;
+        dialogRef.componentInstance.userSurname = this.mySurname;
+        dialogRef.componentInstance.userEmailAddress = this.myEmailAddress;
+      }
+
+      dialogRef.beforeClose().subscribe(result => {
         if (result) {
           if (row.id != null) {
             const diner = this.data.find(s => s.id === result.id);
             if (result.bookingId === '-1') {
               this.data = this.data.filter(s => s.id !== result.id);
+              this._snackBar.open('Diner deleted', null, { duration: 2000 });
               this.filter();
             } else {
               diner.forename = result.forename;
               diner.surname = result.surname;
               diner.notes = result.notes;
+              this._snackBar.open('Diner updated', null, {
+                duration: 2000,
+              });
             }
 
           } else {
@@ -154,6 +144,10 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
             });
             this.data.push(dinerToAdd);
             this.filter();
+
+            this._snackBar.open('Diner added', null, {
+              duration: 2000,
+            });
           }
         }
       });
@@ -172,12 +166,18 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
    dialogRef.componentInstance.tableData = this._dataService.menuSections.find(s => s.name === column.name).menuItems;
    dialogRef.componentInstance.filteredData =  dialogRef.componentInstance.tableData;
 
-   dialogRef.afterClosed().subscribe(result => {
+   dialogRef.beforeClose().subscribe(result => {
     if (result) {
       const diner = this.data.find(s => s.id === row.id);
       diner[column.name].push(result);
     }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this._snackBar.open('Menu choice added', null, { duration: 2000 });
+      }
+      });
   }
 
   getCountMenuChoices(row: any): number {
@@ -197,8 +197,8 @@ export class DinersListGridComponent implements OnInit, OnDestroy   {
       const index = diner[columnName].indexOf(menuChoice);
       if (index > -1) {
         diner[columnName].splice(index, 1);
+        this._snackBar.open('Menu choice deleted', null, { duration: 2000 });
       }
-      // this._notificationsService.success('Menu choice added', 'You have successfully added a menu choice');
     }
     );
   }
